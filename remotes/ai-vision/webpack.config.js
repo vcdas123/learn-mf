@@ -50,7 +50,8 @@ module.exports = (env, argv) => {
       },
       hot: !isProduction,
     },
-    devtool: isProduction ? "source-map" : "eval-source-map",
+    // Use cheaper source maps in production to reduce bundle size
+    devtool: isProduction ? "hidden-source-map" : "eval-source-map",
     plugins: [
       ...common.plugins,
       new ModuleFederationPlugin(getRemoteConfig("ai-vision")),

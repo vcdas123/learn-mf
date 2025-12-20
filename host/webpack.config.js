@@ -69,7 +69,10 @@ module.exports = (env, argv) => {
       },
       hot: true,
     },
-    devtool: isProduction ? "source-map" : "eval-source-map",
+    // Use cheaper source maps in production to reduce bundle size
+    // 'source-map' generates full source maps (large files)
+    // 'hidden-source-map' generates source maps but doesn't reference them (smaller)
+    devtool: isProduction ? "hidden-source-map" : "eval-source-map",
     plugins: [...hostPlugins, new ModuleFederationPlugin(getHostConfig())],
     output: {
       path: path.resolve(__dirname, "dist"),

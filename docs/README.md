@@ -66,6 +66,14 @@ Welcome to the Micro-Frontend Demo documentation. This directory contains compre
 - Best practices for environment management
 - Usage examples and debugging
 
+#### [WEBPACK_BUNDLE_SIZE_WARNINGS.md](./WEBPACK_BUNDLE_SIZE_WARNINGS.md)
+**Description**: Webpack bundle size warnings explanation and solutions
+- Understanding bundle size warnings
+- Why warnings appear in Module Federation
+- Solutions implemented (code splitting, performance hints)
+- Optimization strategies
+- When to worry vs when to ignore warnings
+
 #### [research-templates/](./research-templates/)
 **Description**: Research templates and reference implementations
 - Enterprise-grade host application template
