@@ -43,11 +43,11 @@ microfrontend-demo/
 │   ├── PROJECT_STRUCTURE.md # Complete folder structure
 │   ├── COMPLETE_SETUP_GUIDE.md # Setup and configuration
 │   ├── ENTERPRISE_COMPONENT_ARCHITECTURE.md # Architecture guide
+│   ├── research-templates/ # Research and template files
+│   │   ├── HostApp.enterprise.tsx
+│   │   ├── RemoteApp.enterprise.tsx
+│   │   └── ModuleFederationConfig.enterprise.js
 │   └── ...                 # More documentation files
-├── research-templates/      # Research and template files
-│   ├── HostApp.enterprise.tsx
-│   ├── RemoteApp.enterprise.tsx
-│   └── ModuleFederationConfig.enterprise.js
 ├── package.json             # Root package.json with convenient scripts
 ├── .env                     # Environment variables (ports, URLs)
 └── README.md                # This file
@@ -228,6 +228,8 @@ Comprehensive documentation is available in the [`docs/`](./docs/) directory:
 - **[Project Structure](./docs/PROJECT_STRUCTURE.md)** - Complete folder structure and organization
 - **[Complete Setup Guide](./docs/COMPLETE_SETUP_GUIDE.md)** - Detailed setup and configuration
 - **[Enterprise Architecture](./docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md)** - Architecture principles and patterns
+- **[Environment Variables Guide](./docs/ENV_FILE_GUIDE.md)** - Environment configuration and priority
+- **[Research Templates](./docs/research-templates/)** - Reference implementations and templates
 - **[Quick Start Enterprise](./docs/QUICK_START_ENTERPRISE.md)** - Quick reference guide
 
 ### 📚 All Documentation Files
@@ -380,7 +382,7 @@ This demonstrates that remotes can:
 
 ## 🔗 Additional Resources
 
-- **Research Templates**: See [`research-templates/`](./research-templates/) for reference implementations
+- **Research Templates**: See [`docs/research-templates/`](./docs/research-templates/) for reference implementations
 - **Documentation**: See [`docs/`](./docs/) for comprehensive guides
 - **Configuration**: See [`shared/`](./shared/) for webpack and build configs
 

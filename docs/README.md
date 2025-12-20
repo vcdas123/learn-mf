@@ -57,6 +57,23 @@ Welcome to the Micro-Frontend Demo documentation. This directory contains compre
 - Avoiding CSS conflicts
 - When to use global CSS vs CSS Modules
 
+#### [ENV_FILE_GUIDE.md](./ENV_FILE_GUIDE.md)
+**Description**: Environment variables configuration guide
+- Root `.env` vs remote `.env` files
+- Priority order and override behavior
+- Port and URL configuration
+- Remote-specific environment variables
+- Best practices for environment management
+- Usage examples and debugging
+
+#### [research-templates/](./research-templates/)
+**Description**: Research templates and reference implementations
+- Enterprise-grade host application template
+- Remote application templates
+- Development entry point templates
+- Module Federation configuration templates
+- Reference implementations from architecture design phase
+
 ### Enterprise Architecture
 
 #### [ENTERPRISE_COMPONENT_ARCHITECTURE.md](./ENTERPRISE_COMPONENT_ARCHITECTURE.md)
@@ -94,6 +111,12 @@ Welcome to the Micro-Frontend Demo documentation. This directory contains compre
 ### Need to understand CSS handling?
 → Read [CSS_HANDLING_GUIDE.md](./CSS_HANDLING_GUIDE.md)
 
+### Need to configure environment variables?
+→ See [ENV_FILE_GUIDE.md](./ENV_FILE_GUIDE.md)
+
+### Looking for reference templates?
+→ See [research-templates/](./research-templates/)
+
 ### Need quick reference?
 → See [QUICK_START_ENTERPRISE.md](./QUICK_START_ENTERPRISE.md)
 
@@ -116,6 +139,7 @@ For experienced developers:
 
 ### **Setup & Configuration**
 - [COMPLETE_SETUP_GUIDE.md](./COMPLETE_SETUP_GUIDE.md)
+- [ENV_FILE_GUIDE.md](./ENV_FILE_GUIDE.md)
 - [README.md](../README.md)
 
 ### **Architecture & Design**
@@ -126,8 +150,10 @@ For experienced developers:
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)
 - [ASSET_STRUCTURE.md](./ASSET_STRUCTURE.md)
 - [TAILWIND_POSTCSS_CONFIG.md](./TAILWIND_POSTCSS_CONFIG.md)
+- [research-templates/](./research-templates/) - Reference implementations
 
 ### **Configuration & Build**
+- [ENV_FILE_GUIDE.md](./ENV_FILE_GUIDE.md)
 - [TAILWIND_POSTCSS_CONFIG.md](./TAILWIND_POSTCSS_CONFIG.md)
 - [CSS_HANDLING_GUIDE.md](./CSS_HANDLING_GUIDE.md)
 - [COMPLETE_SETUP_GUIDE.md](./COMPLETE_SETUP_GUIDE.md)
@@ -144,6 +170,7 @@ For experienced developers:
 - ✅ **State Management** - Redux + Zustand patterns
 - ✅ **Styling** - MUI + Tailwind CSS
 - ✅ **CSS Handling** - Global CSS, CSS Modules, scoping
+- ✅ **Environment Variables** - Root and remote .env files with priority
 - ✅ **Component-Based Remotes** - Pure React components
 - ✅ **Development vs Production** - Different entry points
 - ✅ **Standalone Mode** - Independent remote development
@@ -159,7 +186,7 @@ When adding new documentation:
 ## 🚀 Quick Links
 
 - **Main Project**: [../README.md](../README.md)
-- **Research Templates**: [../research-templates/](../research-templates/)
+- **Research Templates**: [research-templates/](./research-templates/)
 - **Host App**: [../host/](../host/)
 - **Remotes**: [../remotes/](../remotes/)
 - **Shared Config**: [../shared/](../shared/)

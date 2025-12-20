@@ -36,15 +36,16 @@ This directory contains research files and template implementations that were cr
 ## 🎯 Usage
 
 These templates are reference implementations. The actual working code is in:
-- `host/src/` - Host application
-- `remotes/*/src/` - Remote applications
-- `shared/webpack.module-federation.js` - Module Federation configuration
+- `../../host/src/` - Host application
+- `../../remotes/*/src/` - Remote applications
+- `../../shared/webpack.module-federation.js` - Module Federation configuration
 
 ## 📚 Related Documentation
 
-- **[Enterprise Component Architecture](../docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md)** - Architecture principles
-- **[Complete Setup Guide](../docs/COMPLETE_SETUP_GUIDE.md)** - Configuration details
-- **[Project Structure](../docs/PROJECT_STRUCTURE.md)** - Current project structure
+- **[Enterprise Component Architecture](../ENTERPRISE_COMPONENT_ARCHITECTURE.md)** - Architecture principles
+- **[Complete Setup Guide](../COMPLETE_SETUP_GUIDE.md)** - Configuration details
+- **[Project Structure](../PROJECT_STRUCTURE.md)** - Current project structure
+- **[Documentation Index](../README.md)** - Complete documentation index
 
 ## 💡 Note
 
