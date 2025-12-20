@@ -1,0 +1,47 @@
+{
+  "name": "microfrontend-demo",
+  "version": "1.0.0",
+  "description": "Enterprise Micro-Frontend Demo - Root Package",
+  "private": true,
+  "scripts": {
+    "// Host Scripts": "",
+    "dev:host": "cd host && npm run dev",
+    "build:host": "cd host && npm run build",
+    "start:host": "cd host && npm run start",
+    
+    "// Grade Remote Scripts": "",
+    "dev:grade": "cd remotes/grade && npm run dev",
+    "build:grade": "cd remotes/grade && npm run build",
+    "start:grade": "cd remotes/grade && npm run start",
+    
+    "// Dynamic Log Sheet Remote Scripts": "",
+    "dev:logsheet": "cd remotes/dynamiclogsheet && npm run dev",
+    "build:logsheet": "cd remotes/dynamiclogsheet && npm run build",
+    "start:logsheet": "cd remotes/dynamiclogsheet && npm run start",
+    
+    "// AI Vision Remote Scripts": "",
+    "dev:ai-vision": "cd remotes/ai-vision && npm run dev",
+    "build:ai-vision": "cd remotes/ai-vision && npm run build",
+    "start:ai-vision": "cd remotes/ai-vision && npm run start",
+    
+    "// Batch Scripts - Install Dependencies": "",
+    "install:all": "npm install && cd host && npm install && cd ../remotes/grade && npm install && cd ../dynamiclogsheet && npm install && cd ../ai-vision && npm install",
+    "install:host": "cd host && npm install",
+    "install:grade": "cd remotes/grade && npm install",
+    "install:logsheet": "cd remotes/dynamiclogsheet && npm install",
+    "install:ai-vision": "cd remotes/ai-vision && npm install",
+    
+    "// Batch Scripts - Build All": "",
+    "build:all": "npm run build:grade && npm run build:logsheet && npm run build:ai-vision && npm run build:host",
+    "build:remotes": "npm run build:grade && npm run build:logsheet && npm run build:ai-vision",
+    
+    "// Info": "",
+    "info": "echo 'Available commands:' && echo '  Dev:    npm run dev:host | dev:grade | dev:logsheet | dev:ai-vision' && echo '  Build:  npm run build:host | build:grade | build:logsheet | build:ai-vision' && echo '  Start:  npm run start:host | start:grade | start:logsheet | start:ai-vision'"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
+
