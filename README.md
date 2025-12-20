@@ -33,7 +33,7 @@ microfrontend-demo/
 │   ├── grade/              # Grade module (Zustand store)
 │   ├── dynamiclogsheet/    # Dynamic Log Sheet module
 │   └── ai-vision/          # AI Vision module
-├── shared/                  # Shared webpack configs
+├── sharedConfigs/          # Shared webpack configs
 │   ├── webpack.common.js   # Common webpack config
 │   ├── webpack.module-federation.js # Module Federation config
 │   ├── postcss.config.js   # PostCSS config (Tailwind)
@@ -384,7 +384,7 @@ This demonstrates that remotes can:
 
 - **Research Templates**: See [`docs/research-templates/`](./docs/research-templates/) for reference implementations
 - **Documentation**: See [`docs/`](./docs/) for comprehensive guides
-- **Configuration**: See [`shared/`](./shared/) for webpack and build configs
+- **Configuration**: See [`sharedConfigs/`](./sharedConfigs/) for webpack and build configs
 
 ---
 

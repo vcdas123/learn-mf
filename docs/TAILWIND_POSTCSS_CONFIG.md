@@ -6,14 +6,14 @@ This guide explains how the shared Tailwind CSS and PostCSS configuration files 
 
 ```
 microfrontend-demo/
-└── shared/
+└── sharedConfigs/
     ├── postcss.config.js    # ✅ Shared PostCSS configuration
     └── tailwind.config.js   # ✅ Shared Tailwind CSS configuration
 ```
 
 ## 🎯 Purpose of Shared Configs
 
-These files in the `shared/` directory provide **centralized configuration** for Tailwind CSS and PostCSS that is used by **all applications** (host and remotes). This ensures:
+These files in the `sharedConfigs/` directory provide **centralized configuration** for Tailwind CSS and PostCSS that is used by **all applications** (host and remotes). This ensures:
 
 - ✅ **Consistent styling** across all apps
 - ✅ **Single source of truth** for Tailwind configuration
@@ -35,11 +35,11 @@ Webpack CSS Loader
     ↓
 PostCSS Loader
     ↓
-Reads: shared/postcss.config.js
+Reads: sharedConfigs/postcss.config.js
     ↓
 ┌─────────────────────────┐
 │ PostCSS Plugins:        │
-│ 1. tailwindcss {}       │ → Reads: shared/tailwind.config.js
+│ 1. tailwindcss {}       │ → Reads: sharedConfigs/tailwind.config.js
 │ 2. autoprefixer {}      │ → Adds vendor prefixes
 └─────────────────────────┘
     ↓
@@ -58,7 +58,7 @@ Processed CSS Output
 
 2. **Webpack processes CSS files:**
    ```javascript
-   // shared/webpack.common.js
+   // sharedConfigs/webpack.common.js
    {
      test: /\.css$/i,
      use: [
@@ -69,9 +69,9 @@ Processed CSS Output
    }
    ```
 
-3. **PostCSS loader reads `shared/postcss.config.js`:**
+3. **PostCSS loader reads `sharedConfigs/postcss.config.js`:**
    ```javascript
-   // shared/postcss.config.js
+   // sharedConfigs/postcss.config.js
    module.exports = {
      plugins: {
        tailwindcss: {},      // ✅ Processes Tailwind directives
@@ -80,9 +80,9 @@ Processed CSS Output
    };
    ```
 
-4. **Tailwind plugin reads `shared/tailwind.config.js`:**
+4. **Tailwind plugin reads `sharedConfigs/tailwind.config.js`:**
    ```javascript
-   // shared/tailwind.config.js
+   // sharedConfigs/tailwind.config.js
    module.exports = {
      content: [
        "./host/src/**/*.{js,jsx,ts,tsx}",       // ✅ Scans host files
@@ -113,7 +113,7 @@ Processed CSS Output
 
 ## 📋 File Details
 
-### `shared/postcss.config.js`
+### `sharedConfigs/postcss.config.js`
 
 ```javascript
 module.exports = {
@@ -133,7 +133,7 @@ module.exports = {
 
 **How it's found:** PostCSS loader automatically looks for `postcss.config.js` in the project root or uses webpack's resolve to find it
 
-### `shared/tailwind.config.js`
+### `sharedConfigs/tailwind.config.js`
 
 ```javascript
 /** @type {import('tailwindcss').Config} */
@@ -176,7 +176,7 @@ PostCSS loader resolves the config file automatically:
 
 2. Since we're building from `host/` or `remotes/*/`:
    - Webpack runs from: `host/` or `remotes/grade/`
-   - PostCSS looks up: `../shared/postcss.config.js` (relative to webpack config)
+   - PostCSS looks up: `../sharedConfigs/postcss.config.js` (relative to webpack config)
 
 ### Tailwind Config Resolution
 
@@ -186,7 +186,7 @@ Tailwind CSS plugin resolves config automatically:
    - Current working directory
    - Parent directories
 
-2. Path resolution in `shared/tailwind.config.js`:
+2. Path resolution in `sharedConfigs/tailwind.config.js`:
    ```javascript
    content: [
      "./host/src/**/*.{js,jsx,ts,tsx}",  // Relative to where Tailwind runs
@@ -208,8 +208,8 @@ Tailwind CSS plugin resolves config automatically:
 
 **Build process:**
 1. Webpack processes `globals.css`
-2. PostCSS loader runs with `shared/postcss.config.js`
-3. Tailwind processes directives using `shared/tailwind.config.js`
+2. PostCSS loader runs with `sharedConfigs/postcss.config.js`
+3. Tailwind processes directives using `sharedConfigs/tailwind.config.js`
 4. Scans `host/src/**/*.{js,jsx,ts,tsx}` for Tailwind classes
 5. Generates optimized CSS
 
@@ -224,8 +224,8 @@ Tailwind CSS plugin resolves config automatically:
 
 **Build process:**
 1. Webpack processes CSS files
-2. PostCSS loader runs with `shared/postcss.config.js`
-3. Tailwind processes using `shared/tailwind.config.js`
+2. PostCSS loader runs with `sharedConfigs/postcss.config.js`
+3. Tailwind processes using `sharedConfigs/tailwind.config.js`
 4. Scans `remotes/grade/src/**/*.{js,jsx,ts,tsx}` for classes
 5. Generates CSS for classes used (e.g., `bg-blue-500`, `text-white`, `p-4`)
 
@@ -255,7 +255,7 @@ function MyComponent() {
 
 ### Extend Tailwind Theme
 
-Edit `shared/tailwind.config.js`:
+Edit `sharedConfigs/tailwind.config.js`:
 
 ```javascript
 module.exports = {
@@ -286,7 +286,7 @@ module.exports = {
 
 ### Add PostCSS Plugins
 
-Edit `shared/postcss.config.js`:
+Edit `sharedConfigs/postcss.config.js`:
 
 ```javascript
 module.exports = {
@@ -319,14 +319,14 @@ module.exports = {
                ▼
 ┌─────────────────────────────────────────┐
 │ 3. PostCSS Loader                       │
-│    Reads: shared/postcss.config.js      │
+│    Reads: sharedConfigs/postcss.config.js      │
 └──────────────┬──────────────────────────┘
                │
                ▼
 ┌─────────────────────────────────────────┐
 │ 4. PostCSS Plugins Execute              │
 │    ┌─────────────────────────────────┐  │
-│    │ tailwindcss {}                  │  │ → Reads: shared/tailwind.config.js
+│    │ tailwindcss {}                  │  │ → Reads: sharedConfigs/tailwind.config.js
 │    │   - Scans content paths         │  │   - Finds classes in your files
 │    │   - Generates utility CSS       │  │   - Only includes used classes
 │    └─────────────────────────────────┘  │
@@ -345,7 +345,7 @@ module.exports = {
 
 ## 🎯 Key Points
 
-1. **Shared Configuration**: Both files are in `shared/` and used by all apps
+1. **Shared Configuration**: Both files are in `sharedConfigs/` and used by all apps
 2. **Automatic Resolution**: Webpack/PostCSS automatically find these configs
 3. **Content Scanning**: Tailwind scans all source files to generate only used classes
 4. **Single Source of Truth**: Update once, applies everywhere
@@ -371,7 +371,7 @@ To verify the configs are working:
 ## 📚 Related Files
 
 - `host/src/styles/globals.css` - Imports Tailwind directives
-- `shared/webpack.common.js` - Configures PostCSS loader
+- `sharedConfigs/webpack.common.js` - Configures PostCSS loader
 - `host/webpack.config.js` - Uses shared webpack config
 - `remotes/*/webpack.config.js` - Uses shared webpack config
 

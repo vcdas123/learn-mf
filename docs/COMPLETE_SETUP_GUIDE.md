@@ -94,7 +94,7 @@ remotes/ai-vision/
 ### Shared Configuration
 
 ```
-shared/
+sharedConfigs/
 ├── webpack.common.js             # Common webpack configuration
 ├── webpack.module-federation.js  # Module Federation setup
 ├── tailwind.config.js            # Tailwind CSS configuration
@@ -105,7 +105,7 @@ shared/
 
 ### 1. Webpack Configuration
 
-#### `shared/webpack.common.js`
+#### `sharedConfigs/webpack.common.js`
 **Purpose**: Common configuration merged by all apps
 
 **Features**:
@@ -121,7 +121,7 @@ shared/
 - CSS modules auto-detection (`.module.css`, `.module.scss`)
 - Tailwind CSS processing via PostCSS
 
-#### `shared/webpack.module-federation.js`
+#### `sharedConfigs/webpack.module-federation.js`
 **Purpose**: Module Federation configuration
 
 **Features**:
@@ -189,7 +189,7 @@ Each app has `tsconfig.json`:
 
 ### 4. Tailwind Configuration
 
-#### `shared/tailwind.config.js`
+#### `sharedConfigs/tailwind.config.js`
 ```javascript
 module.exports = {
   content: [
@@ -203,7 +203,7 @@ module.exports = {
 
 **Content Paths**: Scans all source files for Tailwind classes
 
-#### `shared/postcss.config.js`
+#### `sharedConfigs/postcss.config.js`
 ```javascript
 module.exports = {
   plugins: {

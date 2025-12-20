@@ -69,7 +69,7 @@ microfrontend-demo/
 │   └── ai-vision/                 # AI Vision Module
 │       └── [similar structure]
 │
-├── shared/                         # Shared Configuration
+├── sharedConfigs/                         # Shared Configuration
 │   ├── webpack.common.js          # Common webpack config
 │   ├── webpack.module-federation.js # Module Federation config
 │   ├── tailwind.config.js         # Tailwind configuration
@@ -144,7 +144,7 @@ microfrontend-demo/
 - `src/hooks/` - Custom hooks
   - `useReduxStore.ts` - Safe Redux hooks (works in both host and standalone modes)
 
-### Shared Configuration (`shared/`)
+### Shared Configuration (`sharedConfigs/`)
 
 **Purpose:**
 - Common webpack configuration
@@ -156,13 +156,13 @@ microfrontend-demo/
 
 ### Webpack Configuration
 
-#### `shared/webpack.common.js`
+#### `sharedConfigs/webpack.common.js`
 - Common loaders (TypeScript, CSS, SCSS, images, fonts)
 - Common plugins (HtmlWebpackPlugin, MiniCssExtractPlugin)
 - Common optimization settings
 - Resolves modules from calling app's `node_modules`
 
-#### `shared/webpack.module-federation.js`
+#### `sharedConfigs/webpack.module-federation.js`
 - Module Federation plugin configuration
 - Shared dependencies (React, MUI, Redux, etc.)
 - Host remote configuration
@@ -226,7 +226,7 @@ REMOTE_AI_VISION_URL=http://localhost:3107
 - Animations (fadeIn, etc.)
 - Global resets
 
-### Tailwind CSS (`shared/tailwind.config.js`)
+### Tailwind CSS (`sharedConfigs/tailwind.config.js`)
 - Content paths for all apps
 - Theme customization
 - Custom utilities

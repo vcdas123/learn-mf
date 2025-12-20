@@ -38,7 +38,7 @@ This directory contains research files and template implementations that were cr
 These templates are reference implementations. The actual working code is in:
 - `../../host/src/` - Host application
 - `../../remotes/*/src/` - Remote applications
-- `../../shared/webpack.module-federation.js` - Module Federation configuration
+- `../../sharedConfigs/webpack.module-federation.js` - Module Federation configuration
 
 ## 📚 Related Documentation
 

@@ -148,7 +148,7 @@ GRADE_CACHE_TTL=3600
 All start scripts (`host/scripts/start.js`, `remotes/*/scripts/start.js`) use the shared utility:
 
 ```javascript
-const { loadEnv } = require("../../../shared/load-env");
+const { loadEnv } = require("../../../sharedConfigs/load-env");
 
 const envVars = loadEnv({
   rootEnvPath: path.resolve(__dirname, "../../.env"),
@@ -239,7 +239,7 @@ This helps you verify which configuration is being used.
 
 ## 📚 Related Files
 
-- `shared/load-env.js` - Utility for loading .env files
+- `sharedConfigs/load-env.js` - Utility for loading .env files
 - `host/scripts/start.js` - Host start script
 - `remotes/*/scripts/start.js` - Remote start scripts
 - `host/webpack.config.js` - Host webpack config (reads root .env)

@@ -27,7 +27,7 @@ microfrontend-demo/
 │   └── ai-vision/            # AI Vision module
 ├── docs/                     # Comprehensive documentation
 ├── research-templates/       # Research and template files
-├── shared/                   # Shared webpack configs
+├── sharedConfigs/                   # Shared webpack configs
 └── package.json              # Root package.json with convenient scripts
 ```
 

@@ -8,35 +8,35 @@
     "dev:host": "cd host && npm run dev",
     "build:host": "cd host && npm run build",
     "start:host": "cd host && npm run start",
-    
     "// Grade Remote Scripts": "",
     "dev:grade": "cd remotes/grade && npm run dev",
     "build:grade": "cd remotes/grade && npm run build",
     "start:grade": "cd remotes/grade && npm run start",
-    
     "// Dynamic Log Sheet Remote Scripts": "",
     "dev:logsheet": "cd remotes/dynamiclogsheet && npm run dev",
     "build:logsheet": "cd remotes/dynamiclogsheet && npm run build",
     "start:logsheet": "cd remotes/dynamiclogsheet && npm run start",
-    
     "// AI Vision Remote Scripts": "",
     "dev:ai-vision": "cd remotes/ai-vision && npm run dev",
     "build:ai-vision": "cd remotes/ai-vision && npm run build",
     "start:ai-vision": "cd remotes/ai-vision && npm run start",
-    
     "// Batch Scripts - Install Dependencies": "",
     "install:all": "npm install && cd host && npm install && cd ../remotes/grade && npm install && cd ../dynamiclogsheet && npm install && cd ../ai-vision && npm install",
     "install:host": "cd host && npm install",
     "install:grade": "cd remotes/grade && npm install",
     "install:logsheet": "cd remotes/dynamiclogsheet && npm install",
     "install:ai-vision": "cd remotes/ai-vision && npm install",
-    
     "// Batch Scripts - Build All": "",
     "build:all": "npm run build:grade && npm run build:logsheet && npm run build:ai-vision && npm run build:host",
     "build:remotes": "npm run build:grade && npm run build:logsheet && npm run build:ai-vision",
-    
+    "// Clean Scripts": "",
+    "clean": "rm -rf host/dist remotes/grade/dist remotes/dynamiclogsheet/dist remotes/ai-vision/dist",
+    "clean:host": "rm -rf host/dist",
+    "clean:grade": "rm -rf remotes/grade/dist",
+    "clean:logsheet": "rm -rf remotes/dynamiclogsheet/dist",
+    "clean:ai-vision": "rm -rf remotes/ai-vision/dist",
     "// Info": "",
-    "info": "echo 'Available commands:' && echo '  Dev:    npm run dev:host | dev:grade | dev:logsheet | dev:ai-vision' && echo '  Build:  npm run build:host | build:grade | build:logsheet | build:ai-vision' && echo '  Start:  npm run start:host | start:grade | start:logsheet | start:ai-vision'"
+    "info": "echo '╔══════════════════════════════════════════════════════════════╗' && echo '║          Available NPM Scripts - Micro-Frontend Demo          ║' && echo '╚══════════════════════════════════════════════════════════════╝' && echo '' && echo '📦 Host Application:' && echo '  dev:host          Start host in development mode' && echo '  build:host        Build host for production' && echo '  start:host        Start host from production build' && echo '  install:host      Install host dependencies' && echo '  clean:host        Delete host/dist folder' && echo '' && echo '📚 Grade Remote:' && echo '  dev:grade         Start grade remote in development mode' && echo '  build:grade       Build grade remote for production' && echo '  start:grade       Start grade remote from production build' && echo '  install:grade     Install grade remote dependencies' && echo '  clean:grade       Delete remotes/grade/dist folder' && echo '' && echo '📋 Dynamic Log Sheet Remote:' && echo '  dev:logsheet      Start logsheet remote in development mode' && echo '  build:logsheet    Build logsheet remote for production' && echo '  start:logsheet    Start logsheet remote from production build' && echo '  install:logsheet  Install logsheet remote dependencies' && echo '  clean:logsheet    Delete remotes/dynamiclogsheet/dist folder' && echo '' && echo '🤖 AI Vision Remote:' && echo '  dev:ai-vision     Start AI vision remote in development mode' && echo '  build:ai-vision   Build AI vision remote for production' && echo '  start:ai-vision   Start AI vision remote from production build' && echo '  install:ai-vision Install AI vision remote dependencies' && echo '  clean:ai-vision   Delete remotes/ai-vision/dist folder' && echo '' && echo '🔧 Batch Operations:' && echo '  install:all       Install dependencies for all applications' && echo '  build:all         Build all remotes + host' && echo '  build:remotes     Build all remotes only' && echo '  clean             Delete all dist folders (host + all remotes)' && echo '' && echo 'ℹ️  Info:' && echo '  info              Show this help message'"
   },
   "devDependencies": {},
   "engines": {
@@ -44,4 +44,3 @@
     "npm": ">=8.0.0"
   }
 }
-

@@ -186,7 +186,7 @@ CSS Modules provide **true CSS isolation** by hashing class names, making them u
 **Webpack config** (already configured):
 
 ```javascript
-// shared/webpack.common.js
+// sharedConfigs/webpack.common.js
 {
   test: /\.css$/i,
   use: [
@@ -523,7 +523,7 @@ When remotes run, they can operate in two different contexts:
 **Webpack Config**:
 
 ```javascript
-// shared/webpack.common.js
+// sharedConfigs/webpack.common.js
 {
   test: /\.css$/i,
   use: [
@@ -555,7 +555,7 @@ function injectStylesIntoDOM(css) {
 **Webpack Config**:
 
 ```javascript
-// shared/webpack.common.js
+// sharedConfigs/webpack.common.js
 new MiniCssExtractPlugin({
   filename: "css/[name].[contenthash:8].css",
   chunkFilename: "css/[name].[contenthash:8].chunk.css",

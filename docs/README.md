@@ -189,7 +189,7 @@ When adding new documentation:
 - **Research Templates**: [research-templates/](./research-templates/)
 - **Host App**: [../host/](../host/)
 - **Remotes**: [../remotes/](../remotes/)
-- **Shared Config**: [../shared/](../shared/)
+- **Shared Config**: [../sharedConfigs/](../sharedConfigs/)
 
 ---
 

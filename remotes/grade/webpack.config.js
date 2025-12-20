@@ -1,6 +1,6 @@
 const { merge } = require("webpack-merge");
-const commonConfig = require("../../shared/webpack.common");
-const { getRemoteConfig } = require("../../shared/webpack.module-federation");
+const commonConfig = require("../../sharedConfigs/webpack.common");
+const { getRemoteConfig } = require("../../sharedConfigs/webpack.module-federation");
 const webpack = require("webpack");
 const ModuleFederationPlugin = webpack.container.ModuleFederationPlugin;
 const path = require("path");

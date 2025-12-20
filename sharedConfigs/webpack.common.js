@@ -7,7 +7,7 @@ function requireFromApp(moduleName) {
   const pathsToTry = [
     process.cwd(), // Current working directory (where npm run dev is executed)
     path.resolve(process.cwd(), "node_modules"),
-    __dirname, // Fallback to shared directory
+    __dirname, // Fallback to sharedConfigs directory
     path.resolve(__dirname, ".."), // Parent directory
   ];
 
