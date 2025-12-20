@@ -96,20 +96,20 @@ const sharedDependencies = {
  * Host Module Federation Configuration
  */
 exports.getHostConfig = () => {
-  const REMOTE_GRADE_URL =
-    process.env.REMOTE_GRADE_URL || "http://localhost:3105";
-  const REMOTE_LOGSHEET_URL =
-    process.env.REMOTE_LOGSHEET_URL || "http://localhost:3106";
-  const REMOTE_AI_VISION_URL =
-    process.env.REMOTE_AI_VISION_URL || "http://localhost:3107";
+  const REMOTE_STUDENT_GRADES_URL =
+    process.env.REMOTE_STUDENT_GRADES_URL || "http://localhost:3105";
+  const REMOTE_ACTIVITY_LOG_URL =
+    process.env.REMOTE_ACTIVITY_LOG_URL || "http://localhost:3106";
+  const REMOTE_IMAGE_ANALYZER_URL =
+    process.env.REMOTE_IMAGE_ANALYZER_URL || "http://localhost:3107";
 
   return {
     name: "host",
     remotes: {
-      grade: `grade@${REMOTE_GRADE_URL}/remoteEntry.js`,
-      dynamiclogsheet: `dynamiclogsheet@${REMOTE_LOGSHEET_URL}/remoteEntry.js`,
-      // ai-vision remote uses ai_vision as library name (no hyphens)
-      "ai-vision": `ai_vision@${REMOTE_AI_VISION_URL}/remoteEntry.js`,
+      "student-grades": `student_grades@${REMOTE_STUDENT_GRADES_URL}/remoteEntry.js`,
+      "activity-log": `activity_log@${REMOTE_ACTIVITY_LOG_URL}/remoteEntry.js`,
+      // image-analyzer remote uses image_analyzer as library name (no hyphens)
+      "image-analyzer": `image_analyzer@${REMOTE_IMAGE_ANALYZER_URL}/remoteEntry.js`,
     },
     shared: sharedDependencies,
   };

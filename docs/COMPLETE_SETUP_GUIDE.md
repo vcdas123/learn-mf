@@ -16,7 +16,7 @@
 This is a complete enterprise-grade micro-frontend demonstration with:
 
 - **Host Application**: Single entry point with React root and BrowserRouter
-- **3 Remote Applications**: Grade, Dynamic Log Sheet, AI Vision
+- **3 Remote Applications**: Student Grades, Activity Log, Image Analyzer
 - **Shared State**: Redux store in host, accessible by all remotes
 - **Module State**: Zustand stores in remotes for module-specific state
 - **Modern UI**: Material-UI components with Tailwind CSS utilities
@@ -58,10 +58,10 @@ host/
 └── package.json                  # Dependencies
 ```
 
-### Remote Application (Example: AI Vision)
+### Remote Application (Example: Image Analyzer)
 
 ```
-remotes/ai-vision/
+remotes/image-analyzer/
 ├── src/
 │   ├── App.tsx                   # Production component (exported)
 │   ├── dev.tsx                   # Dev entry (creates own root + router + Redux Provider)
@@ -128,7 +128,7 @@ sharedConfigs/
 - Shared dependencies configuration (singletons)
 - Host remote configuration
 - Remote expose configuration
-- Handles hyphenated remote names (e.g., "ai-vision" → "ai_vision")
+- Handles hyphenated remote names (e.g., "image-analyzer" → "image_analyzer")
 
 **Shared Dependencies** (all eager: true):
 - `react`, `react-dom`
@@ -163,12 +163,12 @@ sharedConfigs/
 #### `.env`
 ```env
 HOST_PORT=3000
-REMOTE_GRADE_PORT=3105
-REMOTE_LOGSHEET_PORT=3106
-REMOTE_AI_VISION_PORT=3107
-REMOTE_GRADE_URL=http://localhost:3105
-REMOTE_LOGSHEET_URL=http://localhost:3106
-REMOTE_AI_VISION_URL=http://localhost:3107
+REMOTE_STUDENT_GRADES_PORT=3105
+REMOTE_ACTIVITY_LOG_PORT=3106
+REMOTE_IMAGE_ANALYZER_PORT=3107
+REMOTE_STUDENT_GRADES_URL=http://localhost:3105
+REMOTE_ACTIVITY_LOG_URL=http://localhost:3106
+REMOTE_IMAGE_ANALYZER_URL=http://localhost:3107
 ```
 
 **Usage**: Loaded by `dotenv` in webpack configs
@@ -267,7 +267,7 @@ dispatch({
 
 ### Module-Specific State (Zustand)
 
-**Example**: `remotes/grade/src/store/useGradeStore.ts`
+**Example**: `remotes/student-grades/src/store/useGradeStore.ts`
 ```typescript
 import { create } from "zustand";
 
@@ -334,13 +334,13 @@ const addGrade = useGradeStore((state) => state.addGrade);
 
 ### Remote Name Handling
 
-**Problem**: Hyphenated names (e.g., "ai-vision") aren't valid JavaScript identifiers
+**Problem**: Hyphenated names (e.g., "image-analyzer") aren't valid JavaScript identifiers
 
 **Solution**: Use `library.name` with underscores in remote config:
 ```javascript
-// Remote config for "ai-vision"
+// Remote config for "image-analyzer"
 {
-  name: "ai-vision",           // Remote name (for import)
+  name: "image-analyzer",       // Remote name (for import)
   library: {
     type: "var",
     name: "ai_vision",         // Valid JS identifier (no hyphens)
@@ -351,7 +351,7 @@ const addGrade = useGradeStore((state) => state.addGrade);
 **Host Config**:
 ```javascript
 remotes: {
-  "ai-vision": "ai_vision@http://localhost:3107/remoteEntry.js",
+  "image-analyzer": "image_analyzer@http://localhost:3107/remoteEntry.js",
 }
 ```
 
@@ -372,13 +372,13 @@ All critical dependencies are shared as singletons with `eager: true`:
 npm run dev:host
 
 # Terminal 2
-npm run dev:ai-vision
+npm run dev:image-analyzer
 
 # Terminal 3
-npm run dev:grade
+npm run dev:student-grades
 
 # Terminal 4
-npm run dev:logsheet
+npm run dev:activity-log
 ```
 
 **Option 2: Individual Terminals**
@@ -387,13 +387,13 @@ npm run dev:logsheet
 cd host && npm run dev
 
 # Terminal 2
-cd remotes/ai-vision && npm run dev
+cd remotes/image-analyzer && npm run dev
 ```
 
 **Option 3: Background Processes**
 ```bash
 npm run dev:host &
-npm run dev:ai-vision &
+npm run dev:image-analyzer &
 ```
 
 ### Testing Remote Integration
@@ -423,9 +423,9 @@ npm run dev:ai-vision &
 npm run build:remotes
 
 # Or build individually
-npm run build:grade
-npm run build:logsheet
-npm run build:ai-vision
+npm run build:student-grades
+npm run build:activity-log
+npm run build:image-analyzer
 
 # Then build host
 npm run build:host
@@ -437,9 +437,9 @@ npm run build:all
 **Manual Build**:
 1. **Build Remotes First**:
    ```bash
-   cd remotes/grade && npm run build && cd ../..
-   cd remotes/dynamiclogsheet && npm run build && cd ../..
-   cd remotes/ai-vision && npm run build && cd ../..
+   cd remotes/student-grades && npm run build && cd ../..
+   cd remotes/activity-log && npm run build && cd ../..
+   cd remotes/image-analyzer && npm run build && cd ../..
    ```
 
 2. **Deploy Remotes**:

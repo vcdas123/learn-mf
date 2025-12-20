@@ -57,7 +57,7 @@ export class RemoteErrorBoundary extends React.Component<
               {isNetworkError ? (
                 <>
                   <Typography variant="body2" sx={{ mb: 2 }}>
-                    Unable to connect to the remote module server. Please ensure:
+                    Unable to connect to the remote module server after multiple retry attempts. Please ensure:
                   </Typography>
                   <Box component="ul" sx={{ pl: 3, mb: 3 }}>
                     <li>The {this.props.moduleName} remote server is running</li>
@@ -65,6 +65,10 @@ export class RemoteErrorBoundary extends React.Component<
                     <li>There are no network connectivity issues</li>
                     <li>CORS is properly configured if accessing from a different origin</li>
                   </Box>
+                  <Typography variant="caption" sx={{ color: "text.secondary", fontStyle: "italic" }}>
+                    Note: The system automatically retries loading remotes. If you just started the servers, 
+                    wait a moment and click "Retry Loading" or refresh the page.
+                  </Typography>
                 </>
               ) : (
                 <Typography variant="body2" sx={{ mb: 3 }}>
@@ -90,8 +94,9 @@ export class RemoteErrorBoundary extends React.Component<
                   <Button
                     variant="contained"
                     onClick={() => {
+                      // Reset error state to trigger a retry
+                      // The lazy loader will automatically retry when the component re-renders
                       this.setState({ hasError: false, error: null });
-                      window.location.reload();
                     }}
                     sx={{
                       background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",

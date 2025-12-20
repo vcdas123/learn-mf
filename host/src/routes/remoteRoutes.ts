@@ -1,8 +1,8 @@
 import React from "react";
 import {
-  GradeRemote,
-  DynamicLogSheetRemote,
-  AiVisionRemote,
+  StudentGradesRemote,
+  ActivityLogRemote,
+  ImageAnalyzerRemote,
 } from "./lazyRemotes";
 
 /**
@@ -21,22 +21,22 @@ export interface RemoteRoute {
 
 export const remoteRoutes: RemoteRoute[] = [
   {
-    path: "/grades",
-    label: "Grades",
-    moduleName: "grade",
-    routePath: "/grades/*",
+    path: "/student-grades",
+    label: "Student Grades",
+    moduleName: "student-grades",
+    routePath: "/student-grades/*",
   },
   {
-    path: "/logsheet",
-    label: "Log Sheet",
-    moduleName: "dynamiclogsheet",
-    routePath: "/logsheet/*",
+    path: "/activity-log",
+    label: "Activity Log",
+    moduleName: "activity-log",
+    routePath: "/activity-log/*",
   },
   {
-    path: "/ai-vision",
-    label: "AI Vision",
-    moduleName: "ai-vision",
-    routePath: "/ai-vision/*",
+    path: "/image-analyzer",
+    label: "Image Analyzer",
+    moduleName: "image-analyzer",
+    routePath: "/image-analyzer/*",
   },
 ];
 
@@ -50,9 +50,9 @@ export const remoteComponentMap: Record<
   string,
   React.LazyExoticComponent<React.ComponentType<any>>
 > = {
-  grade: GradeRemote,
-  dynamiclogsheet: DynamicLogSheetRemote,
-  "ai-vision": AiVisionRemote,
+  "student-grades": StudentGradesRemote,
+  "activity-log": ActivityLogRemote,
+  "image-analyzer": ImageAnalyzerRemote,
 };
 
 export type RemoteComponentKey = keyof typeof remoteComponentMap;
@@ -69,27 +69,27 @@ export interface FeatureConfig {
 
 export const featureConfigs: FeatureConfig[] = [
   {
-    path: "/grades",
+    path: "/student-grades",
     emoji: "📚",
-    title: "Grade Module",
+    title: "Student Grades",
     desc: "Manage student grades and assessments with Zustand state management",
     color: "from-blue-50 to-indigo-50",
     borderColor: "border-blue-200",
     badge: "Zustand",
   },
   {
-    path: "/logsheet",
+    path: "/activity-log",
     emoji: "📋",
-    title: "Dynamic Log Sheet",
-    desc: "Track and manage log entries with real-time updates",
+    title: "Activity Log",
+    desc: "Track and manage activity log entries with real-time updates",
     color: "from-purple-50 to-pink-50",
     borderColor: "border-purple-200",
     badge: "MUI",
   },
   {
-    path: "/ai-vision",
-    emoji: "🤖",
-    title: "AI Vision",
+    path: "/image-analyzer",
+    emoji: "🖼️",
+    title: "Image Analyzer",
     desc: "AI-powered image analysis and insights with advanced features",
     color: "from-indigo-50 to-purple-50",
     borderColor: "border-indigo-200",

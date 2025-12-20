@@ -30,9 +30,9 @@ microfrontend-demo/
 │   │   └── assets/         # Images, fonts, favicons
 │   └── package.json
 ├── remotes/
-│   ├── grade/              # Grade module (Zustand store)
-│   ├── dynamiclogsheet/    # Dynamic Log Sheet module
-│   └── ai-vision/          # AI Vision module
+│   ├── student-grades/     # Student Grades module (Zustand store)
+│   ├── activity-log/       # Activity Log module
+│   └── image-analyzer/      # Image Analyzer module
 ├── sharedConfigs/          # Shared webpack configs
 │   ├── webpack.common.js   # Common webpack config
 │   ├── webpack.module-federation.js # Module Federation config
@@ -67,9 +67,9 @@ npm run install:all
 
 ```bash
 npm run install:host
-npm run install:grade
-npm run install:logsheet
-npm run install:ai-vision
+npm run install:student-grades
+npm run install:activity-log
+npm run install:image-analyzer
 ```
 
 ### 2. Configure Environment
@@ -78,9 +78,9 @@ The `.env` file should already exist with default ports. You can modify it if ne
 
 ```bash
 HOST_PORT=3000
-REMOTE_GRADE_PORT=3105
-REMOTE_LOGSHEET_PORT=3106
-REMOTE_AI_VISION_PORT=3107
+REMOTE_STUDENT_GRADES_PORT=3105
+REMOTE_ACTIVITY_LOG_PORT=3106
+REMOTE_IMAGE_ANALYZER_PORT=3107
 ```
 
 ### 3. Start Development Servers
@@ -93,14 +93,14 @@ Start each application using the convenient root-level scripts:
 # Terminal 1: Host
 npm run dev:host
 
-# Terminal 2: Grade Remote
-npm run dev:grade
+# Terminal 2: Student Grades Remote
+npm run dev:student-grades
 
-# Terminal 3: Log Sheet Remote
-npm run dev:logsheet
+# Terminal 3: Activity Log Remote
+npm run dev:activity-log
 
-# Terminal 4: AI Vision Remote
-npm run dev:ai-vision
+# Terminal 4: Image Analyzer Remote
+npm run dev:image-analyzer
 ```
 
 **Or manually:**

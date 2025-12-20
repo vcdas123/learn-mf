@@ -33,7 +33,7 @@ microfrontend-demo/
 │   └── package.json
 │
 ├── remotes/                        # Remote Applications
-│   ├── grade/                     # Grade Module
+│   ├── student-grades/             # Student Grades Module
 │   │   ├── src/
 │   │   │   ├── App.tsx            # Production component (exported)
 │   │   │   ├── dev.tsx            # Dev-only entry (standalone)
@@ -63,10 +63,10 @@ microfrontend-demo/
 │   │   ├── tsconfig.json
 │   │   └── package.json
 │   │
-│   ├── dynamiclogsheet/           # Log Sheet Module
+│   ├── activity-log/               # Activity Log Module
 │   │   └── [similar structure]
 │   │
-│   └── ai-vision/                 # AI Vision Module
+│   └── image-analyzer/             # Image Analyzer Module
 │       └── [similar structure]
 │
 ├── sharedConfigs/                         # Shared Configuration
