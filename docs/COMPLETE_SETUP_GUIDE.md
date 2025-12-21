@@ -106,9 +106,11 @@ sharedConfigs/
 ### 1. Webpack Configuration
 
 #### `sharedConfigs/webpack.common.js`
+
 **Purpose**: Common configuration merged by all apps
 
 **Features**:
+
 - TypeScript/JavaScript loaders (ts-loader, babel-loader)
 - CSS/SCSS loaders with CSS modules support
 - Asset loaders (images, fonts, favicons)
@@ -117,20 +119,24 @@ sharedConfigs/
 - Code splitting (production only)
 
 **Key Rules**:
+
 - Images < 8kb are inlined as base64
 - CSS modules auto-detection (`.module.css`, `.module.scss`)
 - Tailwind CSS processing via PostCSS
 
 #### `sharedConfigs/webpack.module-federation.js`
+
 **Purpose**: Module Federation configuration
 
 **Features**:
+
 - Shared dependencies configuration (singletons)
 - Host remote configuration
 - Remote expose configuration
 - Handles hyphenated remote names (e.g., "image-analyzer" → "image_analyzer")
 
 **Shared Dependencies** (all eager: true):
+
 - `react`, `react-dom`
 - `react-router-dom`
 - `react-redux`, `@reduxjs/toolkit`
@@ -139,9 +145,11 @@ sharedConfigs/
 - `@emotion/react`, `@emotion/styled`
 
 #### `host/webpack.config.js`
+
 **Purpose**: Host-specific configuration
 
 **Features**:
+
 - Entry: `./src/index.tsx`
 - Port: From `.env` (default: 3000)
 - Merges with `webpack.common.js`
@@ -149,9 +157,11 @@ sharedConfigs/
 - Module Federation: Consumes remotes
 
 #### `remotes/*/webpack.config.js`
+
 **Purpose**: Remote-specific configuration
 
 **Features**:
+
 - Entry: `./src/dev.tsx` (development only)
 - No entry in production builds
 - Port: From `.env` (3105, 3106, 3107)
@@ -161,6 +171,7 @@ sharedConfigs/
 ### 2. Environment Configuration
 
 #### `.env`
+
 ```env
 HOST_PORT=3000
 REMOTE_STUDENT_GRADES_PORT=3105
@@ -176,13 +187,14 @@ REMOTE_IMAGE_ANALYZER_URL=http://localhost:3107
 ### 3. TypeScript Configuration
 
 Each app has `tsconfig.json`:
+
 ```json
 {
   "compilerOptions": {
     "target": "ES2020",
     "jsx": "react-jsx",
     "strict": true,
-    "noEmit": false,  // Important: Must be false for webpack
+    "noEmit": false // Important: Must be false for webpack
   }
 }
 ```
@@ -190,6 +202,7 @@ Each app has `tsconfig.json`:
 ### 4. Tailwind Configuration
 
 #### `sharedConfigs/tailwind.config.js`
+
 ```javascript
 module.exports = {
   content: [
@@ -204,6 +217,7 @@ module.exports = {
 **Content Paths**: Scans all source files for Tailwind classes
 
 #### `sharedConfigs/postcss.config.js`
+
 ```javascript
 module.exports = {
   plugins: {
@@ -220,6 +234,7 @@ module.exports = {
 **Location**: `host/src/store/`
 
 **Structure**:
+
 ```typescript
 {
   app: {
@@ -236,7 +251,9 @@ module.exports = {
 ```
 
 **Slices**:
+
 1. **appSlice.ts** - Application-wide state
+
    - Actions: `setTheme`, `setCurrentModule`, `addNotification`, `removeNotification`, `setUser`
 
 2. **counterSlice.ts** - Demo counter (testable from remotes)
@@ -245,17 +262,22 @@ module.exports = {
 ### Using Redux in Remotes
 
 **Import Types**:
+
 ```typescript
 import type { RootState } from "../../../../host/src/store";
 ```
 
 **Access State**:
+
 ```typescript
 const counter = useSelector((state: RootState) => state.counter.value);
-const notifications = useSelector((state: RootState) => state.app.notifications);
+const notifications = useSelector(
+  (state: RootState) => state.app.notifications
+);
 ```
 
 **Dispatch Actions**:
+
 ```typescript
 // Using action type strings (works across Module Federation)
 dispatch({ type: "counter/increment" });
@@ -268,6 +290,7 @@ dispatch({
 ### Module-Specific State (Zustand)
 
 **Example**: `remotes/student-grades/src/store/useGradeStore.ts`
+
 ```typescript
 import { create } from "zustand";
 
@@ -278,6 +301,7 @@ export const useGradeStore = create((set) => ({
 ```
 
 **Usage**:
+
 ```typescript
 const grades = useGradeStore((state) => state.grades);
 const addGrade = useGradeStore((state) => state.addGrade);
@@ -288,21 +312,25 @@ const addGrade = useGradeStore((state) => state.addGrade);
 ### Styling Approaches
 
 1. **Tailwind CSS Utilities**
+
    ```tsx
    <div className="p-4 bg-blue-50 rounded-lg shadow-md">
    ```
 
 2. **MUI Components**
+
    ```tsx
    <Button variant="contained" color="primary">
    ```
 
 3. **MUI sx Prop**
+
    ```tsx
    <Box sx={{ padding: 2, backgroundColor: 'primary.main' }}>
    ```
 
 4. **CSS Modules**
+
    ```tsx
    import styles from './Component.module.css';
    <div className={styles.container}>
@@ -311,22 +339,27 @@ const addGrade = useGradeStore((state) => state.addGrade);
 5. **Global CSS**
    ```css
    /* In globals.css or component CSS */
-   .custom-class { ... }
+   .custom-class {
+     ...;
+   }
    ```
 
 ### File Organization
 
 **Global Styles**: `host/src/styles/globals.css`
+
 - Tailwind directives
 - Custom animations
 - Global resets
 - Custom scrollbar
 
 **Module Styles**: `remotes/*/src/styles/`
+
 - Module-specific global styles
 - CSS modules per component
 
 **Component Styles**: Co-located with components
+
 - `ComponentName.module.css`
 - `ComponentName.module.scss`
 
@@ -337,18 +370,20 @@ const addGrade = useGradeStore((state) => state.addGrade);
 **Problem**: Hyphenated names (e.g., "image-analyzer") aren't valid JavaScript identifiers
 
 **Solution**: Use `library.name` with underscores in remote config:
+
 ```javascript
 // Remote config for "image-analyzer"
 {
   name: "image-analyzer",       // Remote name (for import)
   library: {
     type: "var",
-    name: "ai_vision",         // Valid JS identifier (no hyphens)
+    name: "image_analyzer",         // Valid JS identifier (no hyphens)
   },
 }
 ```
 
 **Host Config**:
+
 ```javascript
 remotes: {
   "image-analyzer": "image_analyzer@http://localhost:3107/remoteEntry.js",
@@ -358,6 +393,7 @@ remotes: {
 ### Shared Dependencies
 
 All critical dependencies are shared as singletons with `eager: true`:
+
 - Ensures immediate availability
 - Prevents multiple instances
 - Maintains version consistency
@@ -367,6 +403,7 @@ All critical dependencies are shared as singletons with `eager: true`:
 ### Starting Applications
 
 **Option 1: Using Root Package.json Scripts (Recommended)**
+
 ```bash
 # Terminal 1
 npm run dev:host
@@ -382,6 +419,7 @@ npm run dev:activity-log
 ```
 
 **Option 2: Individual Terminals**
+
 ```bash
 # Terminal 1
 cd host && npm run dev
@@ -391,6 +429,7 @@ cd remotes/image-analyzer && npm run dev
 ```
 
 **Option 3: Background Processes**
+
 ```bash
 npm run dev:host &
 npm run dev:image-analyzer &
@@ -418,6 +457,7 @@ npm run dev:image-analyzer &
 ### Build Process
 
 **Using Root Package.json Scripts (Recommended)**:
+
 ```bash
 # Build all remotes first
 npm run build:remotes
@@ -435,7 +475,9 @@ npm run build:all
 ```
 
 **Manual Build**:
+
 1. **Build Remotes First**:
+
    ```bash
    cd remotes/student-grades && npm run build && cd ../..
    cd remotes/activity-log && npm run build && cd ../..
@@ -443,14 +485,17 @@ npm run build:all
    ```
 
 2. **Deploy Remotes**:
+
    - Upload each `dist/` folder to CDN/server
    - Ensure `remoteEntry.js` is accessible at configured URLs
 
 3. **Update Host Config**:
+
    - Update `.env` with production remote URLs
    - Or modify `webpack.module-federation.js` directly
 
 4. **Build Host**:
+
    ```bash
    cd host && npm run build
    ```
@@ -471,4 +516,3 @@ npm run build:all
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Detailed structure
 - [ASSET_STRUCTURE.md](./ASSET_STRUCTURE.md) - Asset organization
 - [docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md](./docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md) - Architecture guide
-
