@@ -228,6 +228,8 @@ Comprehensive documentation is available in the [`docs/`](./docs/) directory:
 - **[Project Structure](./docs/PROJECT_STRUCTURE.md)** - Complete folder structure and organization
 - **[Complete Setup Guide](./docs/COMPLETE_SETUP_GUIDE.md)** - Detailed setup and configuration
 - **[Enterprise Architecture](./docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md)** - Architecture principles and patterns
+- **[Execution Flow](./docs/EXECUTION_FLOW.md)** - How remotes run in standalone vs host mode
+- **[Module Federation Eager Loading](./docs/MODULE_FEDERATION_EAGER_LOADING.md)** - Understanding `eager: true` in shared dependencies
 - **[Environment Variables Guide](./docs/ENV_FILE_GUIDE.md)** - Environment configuration and priority
 - **[Research Templates](./docs/research-templates/)** - Reference implementations and templates
 - **[Quick Start Enterprise](./docs/QUICK_START_ENTERPRISE.md)** - Quick reference guide

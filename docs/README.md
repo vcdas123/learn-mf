@@ -31,6 +31,23 @@ Welcome to the Micro-Frontend Demo documentation. This directory contains compre
 - Module Federation setup
 - Development vs production workflows
 
+#### [EXECUTION_FLOW.md](./EXECUTION_FLOW.md)
+**Description**: Step-by-step execution flow for remote applications
+- Standalone mode execution flow (remote on own port)
+- Host mode execution flow (remote loaded by host)
+- Webpack configuration breakdown
+- Module Federation resolution process
+- Component tree diagrams
+- Key differences between modes
+
+#### [MODULE_FEDERATION_EAGER_LOADING.md](./MODULE_FEDERATION_EAGER_LOADING.md)
+**Description**: Understanding `eager: true` in Module Federation shared dependencies
+- What is eager loading vs lazy loading
+- Why use `eager: true` for critical dependencies
+- When to use eager loading
+- Trade-offs and benefits
+- Real-world examples and scenarios
+
 #### [ASSET_STRUCTURE.md](./ASSET_STRUCTURE.md)
 **Description**: Asset organization and management guide
 - Image asset guidelines
@@ -74,6 +91,15 @@ Welcome to the Micro-Frontend Demo documentation. This directory contains compre
 - Optimization strategies
 - When to worry vs when to ignore warnings
 
+#### [WEBPACK_PUBLIC_PATH.md](./WEBPACK_PUBLIC_PATH.md)
+**Description**: Understanding `publicPath: "auto"` in webpack output configuration
+- What is `publicPath` and why it matters
+- How `"auto"` automatically detects the correct path
+- Why it's perfect for Module Federation
+- Real-world examples and scenarios
+- Comparison with static values
+- Common issues and solutions
+
 #### [research-templates/](./research-templates/)
 **Description**: Research templates and reference implementations
 - Enterprise-grade host application template
@@ -109,6 +135,9 @@ Welcome to the Micro-Frontend Demo documentation. This directory contains compre
 
 ### Want to understand the architecture?
 → Start with [ENTERPRISE_COMPONENT_ARCHITECTURE.md](./ENTERPRISE_COMPONENT_ARCHITECTURE.md)
+
+### Need to understand how remotes run?
+→ Read [EXECUTION_FLOW.md](./EXECUTION_FLOW.md)
 
 ### Need to set up the project?
 → Follow [COMPLETE_SETUP_GUIDE.md](./COMPLETE_SETUP_GUIDE.md)
@@ -152,6 +181,8 @@ For experienced developers:
 
 ### **Architecture & Design**
 - [ENTERPRISE_COMPONENT_ARCHITECTURE.md](./ENTERPRISE_COMPONENT_ARCHITECTURE.md)
+- [EXECUTION_FLOW.md](./EXECUTION_FLOW.md)
+- [MODULE_FEDERATION_EAGER_LOADING.md](./MODULE_FEDERATION_EAGER_LOADING.md)
 - [QUICK_START_ENTERPRISE.md](./QUICK_START_ENTERPRISE.md)
 
 ### **Project Organization**
@@ -164,6 +195,9 @@ For experienced developers:
 - [ENV_FILE_GUIDE.md](./ENV_FILE_GUIDE.md)
 - [TAILWIND_POSTCSS_CONFIG.md](./TAILWIND_POSTCSS_CONFIG.md)
 - [CSS_HANDLING_GUIDE.md](./CSS_HANDLING_GUIDE.md)
+- [MODULE_FEDERATION_EAGER_LOADING.md](./MODULE_FEDERATION_EAGER_LOADING.md)
+- [WEBPACK_PUBLIC_PATH.md](./WEBPACK_PUBLIC_PATH.md)
+- [WEBPACK_BUNDLE_SIZE_WARNINGS.md](./WEBPACK_BUNDLE_SIZE_WARNINGS.md)
 - [COMPLETE_SETUP_GUIDE.md](./COMPLETE_SETUP_GUIDE.md)
 
 ### **Styling & CSS**
@@ -182,6 +216,7 @@ For experienced developers:
 - ✅ **Component-Based Remotes** - Pure React components
 - ✅ **Development vs Production** - Different entry points
 - ✅ **Standalone Mode** - Independent remote development
+- ✅ **Execution Flows** - How remotes run in standalone vs host mode
 
 ## 📝 Contributing
 

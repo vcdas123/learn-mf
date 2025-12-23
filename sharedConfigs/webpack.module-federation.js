@@ -128,10 +128,10 @@ exports.getRemoteConfig = (remoteName) => {
     shared: sharedDependencies,
   };
 
-  // Fix for remote names with hyphens (e.g., "ai-vision")
+  // Fix for remote names with hyphens (e.g., "activity-log")
   // Use "var" type with a valid identifier (no hyphens)
   if (remoteName.includes("-")) {
-    // Convert "ai-vision" to "ai_vision" for the library name
+    // Convert "activity-log" to "activity_log" for the library name
     const validIdentifier = remoteName.replace(/-/g, "_");
     config.library = {
       type: "var",
