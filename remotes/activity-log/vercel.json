@@ -11,6 +11,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/((?!.*\\.(?:js|css|json|png|jpg|jpeg|gif|svg|webp|avif|woff|woff2|eot|ttf|otf|ico|map)$).*).*", "destination": "/index.html" }
+    { "source": "/([^.]*)", "destination": "/index.html" }
   ]
 }
