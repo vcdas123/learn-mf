@@ -1,4 +1,4 @@
-# Research Templates & Reference Files
+[⬅️ Back to Master Index](../../README.md)\n\n# Research Templates & Reference Files
 
 This directory contains research files and template implementations that were created during the architecture design phase. These files serve as reference implementations and documentation of the enterprise-grade micro-frontend architecture.
 

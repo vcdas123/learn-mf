@@ -1,4 +1,4 @@
-# Remote Application Execution Flows
+[⬅️ Back to Master Index](../README.md)\n\n# Remote Application Execution Flows
 
 ## Overview
 
@@ -466,4 +466,3 @@ npm run build:host
 ---
 
 This dual-mode architecture allows remotes to be developed independently while seamlessly integrating with the host application.
-

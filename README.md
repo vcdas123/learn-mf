@@ -176,219 +176,99 @@ npm run info            # Display all available commands
 - **Beautiful UI** - Modern cards, gradients, and animations
 - **Standalone Mode** - Each remote can run independently
 
-## 🔄 Redux Store Integration
+## 📚 Knowledge Center (Master Documentation Index)
 
-The host provides a Redux store with the following slices:
+This project is extensively documented to serve as a reference for enterprise micro-frontend architecture. Use this section as your primary index for all "notes" and technical guides.
 
-**appSlice** - Application state:
+### 🏁 Getting Started & Setup
+- **[Complete Setup Guide](./docs/COMPLETE_SETUP_GUIDE.md)** - Master guide for environment, webpack, and state management.
+- **[Environment Variables Guide](./docs/ENV_FILE_GUIDE.md)** - Understanding `.env` priority and configuration.
+- **[Project Structure](./docs/PROJECT_STRUCTURE.md)** - Complete breakdown of the repository organization.
+- **[Demo Setup](./docs/DEMO_SETUP.md)** - How to run and test the provided demo scenarios.
+- **[Quick Start Enterprise](./docs/QUICK_START_ENTERPRISE.md)** - "DOs and DON'Ts" and enterprise patterns.
 
-- `theme`: "light" | "dark"
-- `currentModule`: string | null
-- `notifications`: Array of notification objects
-- `user`: User information
+### 🏗️ Architecture & Core Principles
+- **[Enterprise Architecture](./docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md)** - Single root, single router, and pure component patterns.
+- **[Execution Flow](./docs/EXECUTION_FLOW.md)** - Step-by-step breakdown of Standalone vs. Host modes.
+- **[Module Federation Eager Loading](./docs/MODULE_FEDERATION_EAGER_LOADING.md)** - Dependency sharing and `eager: true` configuration.
+- **[Webpack Public Path](./docs/WEBPACK_PUBLIC_PATH.md)** - How dynamic loading works with `publicPath: "auto"`.
 
-**counterSlice** - Demo counter:
+### 🛠️ Technical Deep Dives
+- **[CSS Handling Guide](./docs/CSS_HANDLING_GUIDE.md)** - Integrating Tailwind, MUI, and CSS Modules.
+- **[Tailwind & PostCSS Config](./docs/TAILWIND_POSTCSS_CONFIG.md)** - Deep dive into shared styling configuration.
+- **[Asset Structure](./docs/ASSET_STRUCTURE.md)** - Guidelines for images, fonts, and favicons.
+- **[Bundle Size Optimization](./docs/WEBPACK_BUNDLE_SIZE_WARNINGS.md)** - Managing and optimizing build outputs.
+- **[Research Templates](./docs/research-templates/README.md)** - Reference implementations for host and remotes.
 
-- `value`: number
-- `history`: number[]
+### 🚀 Deployment
+- **[Vercel Deployment Guide](./docs/VERCEL_DEPLOYMENT_GUIDE.md)** - Production setup, CORS, and deployment workflows.
 
-### Using Redux in Remotes
+---
 
-Remotes can access and control the host Redux store:
-
-```typescript
-import { useSelector, useDispatch } from "../hooks/useReduxStore";
-
-// Access state
-const counter = useSelector((state: any) => state.counter.value);
-
-// Dispatch actions
-dispatch({ type: "counter/increment" });
-dispatch({
-  type: "app/addNotification",
-  payload: {
-    message: "Hello from remote!",
-    type: "success",
-  },
-});
-```
-
-**Example Redux Interactions:**
-
-- **Student Grades**: Increments counter and shows success notification
-- **Activity Log**: Decrements counter and shows info notification
-- **Image Analyzer**: Increments counter and shows success notification
-
-## 📖 Documentation
-
-Comprehensive documentation is available in the [`docs/`](./docs/) directory:
-
-### 📋 Quick Links
-
-- **[Documentation Index](./docs/README.md)** - Overview of all documentation
-- **[Project Structure](./docs/PROJECT_STRUCTURE.md)** - Complete folder structure and organization
-- **[Complete Setup Guide](./docs/COMPLETE_SETUP_GUIDE.md)** - Detailed setup and configuration
-- **[Enterprise Architecture](./docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md)** - Architecture principles and patterns
-- **[Execution Flow](./docs/EXECUTION_FLOW.md)** - How remotes run in standalone vs host mode
-- **[Module Federation Eager Loading](./docs/MODULE_FEDERATION_EAGER_LOADING.md)** - Understanding `eager: true` in shared dependencies
-- **[Environment Variables Guide](./docs/ENV_FILE_GUIDE.md)** - Environment configuration and priority
-- **[Research Templates](./docs/research-templates/)** - Reference implementations and templates
-- **[Quick Start Enterprise](./docs/QUICK_START_ENTERPRISE.md)** - Quick reference guide
-
-### 📚 All Documentation Files
-
-See the [docs/README.md](./docs/README.md) for a complete index of all available documentation.
-
-## 🎯 Key Features
+## 🎯 Key Features & Capabilities
 
 ### State Management
+- ✅ **Shared Redux** - Host store is naturally accessible by all remotes.
+- ✅ **Zustand Support** - Remotes can use module-specific state.
+- ✅ **Local State** - Standard React hooks usage across all components.
 
-- ✅ **Redux** - Shared state in host (accessible by all remotes)
-- ✅ **Zustand** - Module-specific state in remotes
-- ✅ **Local State** - Component-level state with React hooks
-
-### Styling
-
-- ✅ **Tailwind CSS** - Utility-first classes throughout
-- ✅ **MUI Components** - Material Design components
-- ✅ **CSS Modules** - Component-scoped styles (`.module.css`, `.module.scss`)
-- ✅ **Global CSS** - Shared styles in `host/src/styles/globals.css`
-- ✅ **Gradients** - Beautiful gradient effects
-- ✅ **Animations** - Framer Motion animations and transitions
+### Styling & UI
+- ✅ **Unified Tailwind** - Utility-first classes shared across the ecosystem.
+- ✅ **MUI Integration** - Enterprise-grade component library.
+- ✅ **Framer Motion** - Smooth, coordinated animations between modules.
+- ✅ **CSS Isolation** - CSS Modules used where scoping is required.
 
 ### UI Components
+- ✅ **Responsive Navigation** - Shared AppBar with mobile drawer support.
+- ✅ **Notification System** - Global toast notifications triggered from any remote.
+- ✅ **Architecture Info** - Built-in documentation and diagrams within the UI.
 
-- ✅ **Navigation** - Responsive AppBar with mobile drawer
-- ✅ **Cards** - Feature cards with hover effects
-- ✅ **Buttons** - Material-UI buttons with icons
-- ✅ **Notifications** - Toast notification system
-- ✅ **Progress Indicators** - Loading states and progress bars
-- ✅ **Chips** - Status indicators and badges
-- ✅ **Typography** - Consistent text styling
+---
 
-## 📦 Shared Dependencies
+## 🏭 Production Build & Deployment
 
-All applications share these as singletons:
-
-- `react` & `react-dom`
-- `react-router-dom`
-- `react-redux` & `@reduxjs/toolkit`
-- `zustand`
-- `@mui/material` & `@mui/icons-material`
-- `@emotion/react` & `@emotion/styled`
-- `framer-motion`
-
-## 🏭 Production Build
-
-### Build Remotes First
-
+### Build Workflow
 ```bash
-# Build all remotes
+# 1. Build all remotes (remotes have NO entry point in production)
 npm run build:remotes
 
-# Or build individually
-npm run build:student-grades
-npm run build:activity-log
-npm run build:image-analyzer
-```
-
-### Build Host
-
-```bash
+# 2. Build host (loads remotes via remoteEntry.js)
 npm run build:host
-```
 
-**Or build everything:**
-
-```bash
+# OR build everything at once
 npm run build:all
 ```
 
-**Important**: In production builds:
+### 🌐 Production Environment Variables
+Set these in your CI/CD or production platform (Vercel, AWS, etc.):
 
-- Remotes have **NO entry point** (entry removed in webpack config)
-- Only `App.tsx` is exposed via Module Federation
-- Host loads remotes from built `remoteEntry.js` files
+| Variable | Description |
+|----------|-------------|
+| `REMOTE_STUDENT_GRADES_URL` | Base URL for Student Grades remote |
+| `REMOTE_ACTIVITY_LOG_URL` | Base URL for Activity Log remote |
+| `REMOTE_IMAGE_ANALYZER_URL` | Base URL for Image Analyzer remote |
 
-## 🐛 Troubleshooting
+---
 
-### Module Federation Errors
+## 🧪 Verification: Testing Redux Integration
 
-**"vision is not defined" or similar errors:**
+1.  **Home Page**: Navigate to [http://localhost:3000](http://localhost:3000).
+2.  **Host Action**: Use the counter buttons to increment/decrement state.
+3.  **Remote Switch**: Navigate to any remote module (e.g., Student Grades).
+4.  **Shared State**: Observe the same counter value in the remote.
+5.  **Remote Action**: Click action buttons in the remote to update the host store.
+6.  **Confirmation**: Verify notifications and state updates reflect globally.
 
-- Ensure remote servers are running
-- Check that `remoteEntry.js` is accessible
-- Verify webpack Module Federation configuration
+---
 
-**Shared module errors:**
+## 🐛 Troubleshooting Quick-Ref
 
-- Ensure all shared dependencies have compatible versions
-- Check that `eager: true` is set for critical dependencies
-
-### TypeScript Errors
-
-**Remote imports:**
-
-- TypeScript warnings for Module Federation imports are expected
-- Use `@ts-ignore` for remote imports if needed
-
-**Redux types:**
-
-- Remotes import types from host: `../../../../host/src/store`
-- Standalone mode uses mock types from `hooks/useReduxStore`
-
-### Build Errors
-
-1. Ensure all dependencies installed: `npm run install:all`
-2. Check TypeScript config (`noEmit: false` in all `tsconfig.json`)
-3. Verify webpack configs are correct
-4. Check `.env` file exists with correct ports
-
-### Standalone Mode Errors
-
-**Redux context errors:**
-
-- Standalone mode uses mock Redux store from `store/standaloneStore.ts`
-- Ensure `dev.tsx` wraps app with Redux Provider
-
-**Zustand errors:**
-
-- Ensure `zustand` is set to `eager: true` in Module Federation config
-
-## 📝 Notes
-
-- **Production builds** exclude dev entries from remotes
-- **Assets** organized in `src/assets/` and `public/assets/`
-- **CSS extracted** in production builds
-- **SCSS/SASS modules** supported
-- **Tailwind CSS** configured globally
-- **Redux store** shared and accessible from all remotes
-- **Beautiful, responsive UI** with MUI and Tailwind
-- **Framer Motion** animations throughout
-
-## 🎯 Testing Redux Integration
-
-1. Navigate to host home page (http://localhost:3000)
-2. Use the counter buttons to increment/decrement
-3. Navigate to any remote module (Student Grades, Activity Log, Image Analyzer)
-4. See the same counter value displayed
-5. Click action buttons in remotes to modify counter
-6. Counter updates and shows notification
-7. Navigate back to home - counter value persists
-
-This demonstrates that remotes can:
-
-- ✅ Read from host Redux store
-- ✅ Dispatch actions to host Redux store
-- ✅ Trigger notifications in host
-- ✅ Share state across all modules
-
-## 🔗 Additional Resources
-
-- **Research Templates**: See [`docs/research-templates/`](./docs/research-templates/) for reference implementations
-- **Documentation**: See [`docs/`](./docs/) for comprehensive guides
-- **Configuration**: See [`sharedConfigs/`](./sharedConfigs/) for webpack and build configs
+- **"vision is not defined"**: Ensure all remote servers are running and `remoteEntry.js` is accessible.
+- **Shared Module Errors**: Check `MODULE_FEDERATION_EAGER_LOADING.md` for version compatibility.
+- **TypeScript Warnings**: Expected for remote imports; see `COMPLETE_SETUP_GUIDE.md`.
+- **Build Failures**: Run `npm run install:all` to ensure all peer dependencies are met.
 
 ---
 
 **Built with ❤️ using Webpack Module Federation, React, Redux, MUI, Tailwind CSS, and Framer Motion**
+

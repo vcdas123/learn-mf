@@ -1,4 +1,4 @@
-# Project Structure & Documentation
+[⬅️ Back to Master Index](../README.md)\n\n# Project Structure & Documentation
 
 ## 📁 Complete Folder Structure
 
@@ -377,4 +377,3 @@ npm run build:host
 - **MUI Components**: Material Design components
 - **CSS Modules**: Component-scoped styles
 - **Global CSS**: Shared styles in host
-

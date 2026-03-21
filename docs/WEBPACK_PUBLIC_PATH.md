@@ -1,4 +1,4 @@
-# Webpack `publicPath: "auto"` Explained
+[⬅️ Back to Master Index](../README.md)\n\n# Webpack `publicPath: "auto"` Explained
 
 ## What is `publicPath`?
 
@@ -354,4 +354,3 @@ output: {
 3. **Perfect for Module Federation** - handles cross-origin loading
 4. **Works in all scenarios** - dev, production, standalone, host mode
 5. **No manual configuration needed** - webpack figures it out
-

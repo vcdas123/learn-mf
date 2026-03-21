@@ -1,4 +1,4 @@
-# Environment Variables Guide
+[⬅️ Back to Master Index](../README.md)\n\n# Environment Variables Guide
 
 This guide explains how environment variables work in the micro-frontend architecture, including priority and configuration.
 

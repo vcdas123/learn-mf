@@ -1,4 +1,4 @@
-# Tailwind CSS & PostCSS Configuration Guide
+[⬅️ Back to Master Index](../README.md)\n\n# Tailwind CSS & PostCSS Configuration Guide
 
 This guide explains how the shared Tailwind CSS and PostCSS configuration files are used across all applications in the micro-frontend demo.
 
@@ -378,4 +378,3 @@ To verify the configs are working:
 ---
 
 **Summary**: The shared PostCSS and Tailwind configs ensure consistent styling across all applications. They're automatically discovered by webpack during the build process, and Tailwind generates optimized CSS based on classes actually used in your source files.
-

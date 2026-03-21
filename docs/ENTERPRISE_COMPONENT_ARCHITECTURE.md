@@ -1,4 +1,4 @@
-# Enterprise Component-Based Micro-Frontend Architecture
+[⬅️ Back to Master Index](../README.md)\n\n# Enterprise Component-Based Micro-Frontend Architecture
 
 ## 🎯 Core Principle
 
@@ -625,4 +625,3 @@ This enterprise architecture provides:
 7. **Clean Separation**: Dev and production code are separate
 
 **Key Takeaway**: Remotes are React components, not separate applications. They inherit context naturally from the host, eliminating the need for manual context passing or multiple React roots. Development mode uses a separate entry point for standalone testing.
-

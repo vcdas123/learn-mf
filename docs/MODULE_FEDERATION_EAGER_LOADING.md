@@ -1,4 +1,4 @@
-# Module Federation: `eager: true` Explained
+[⬅️ Back to Master Index](../README.md)\n\n# Module Federation: `eager: true` Explained
 
 ## What is `eager: true`?
 
@@ -258,4 +258,3 @@ main.js (app code + React bundled together)
 - ✅ Ensure it's **always available** before any code runs
 
 **Use it for critical dependencies** that your application **must have** to function, especially those used in entry points and context providers.
-

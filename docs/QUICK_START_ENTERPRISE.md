@@ -1,4 +1,4 @@
-# Quick Start: Enterprise Component Architecture
+[⬅️ Back to Master Index](../README.md)\n\n# Quick Start: Enterprise Component Architecture
 
 ## 🚀 Host Setup (5 minutes)
 
@@ -168,4 +168,3 @@ The actual working implementation includes:
 - React Router future flags to suppress warnings
 - Standalone Redux stores for independent remote development
 - Safe Redux hooks that work in both host and standalone modes
-

@@ -1,4 +1,4 @@
-# Webpack Bundle Size Warnings - Explanation & Solutions
+[⬅️ Back to Master Index](../README.md)\n\n# Webpack Bundle Size Warnings - Explanation & Solutions
 
 ## ⚠️ What Are These Warnings?
 
@@ -289,4 +289,3 @@ For very large libraries, consider loading from CDN instead of bundling.
 - [Webpack Performance](https://webpack.js.org/configuration/performance/)
 - [Code Splitting](https://webpack.js.org/guides/code-splitting/)
 - [Module Federation](https://webpack.js.org/concepts/module-federation/)
-

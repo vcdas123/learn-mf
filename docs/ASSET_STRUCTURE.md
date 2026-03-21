@@ -1,4 +1,4 @@
-# Asset Structure & Organization
+[⬅️ Back to Master Index](../README.md)\n\n# Asset Structure & Organization
 
 This guide explains how assets (images, fonts, favicons) are organized in the micro-frontend demo project.
 
