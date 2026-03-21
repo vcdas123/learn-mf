@@ -13,6 +13,13 @@ Welcome to the Micro-Frontend Demo documentation. This directory contains compre
 - Basic usage examples
 - Troubleshooting tips
 
+#### [VERCEL_DEPLOYMENT_GUIDE.md](./VERCEL_DEPLOYMENT_GUIDE.md)
+**Description**: Step-by-step guide for deploying the architecture to Vercel
+- Creating multiple Vercel projects
+- Configuring CORS for remotes
+- Setting environment variables for production
+- Handling SPA routing on Vercel
+
 ### Architecture & Structure
 
 #### [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)
