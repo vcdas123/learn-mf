@@ -37,6 +37,7 @@ module.exports = (env, argv) => {
 
   // Host always needs HtmlWebpackPlugin (even in production)
   const HtmlWebpackPlugin = requireFromApp("html-webpack-plugin");
+  const CopyWebpackPlugin = requireFromApp("copy-webpack-plugin");
   const hostPlugins = [
     ...common.plugins,
     // Add HtmlWebpackPlugin for host if not already present
@@ -55,6 +56,18 @@ module.exports = (env, argv) => {
               : false,
           }),
         ]),
+    // Copy public assets to dist
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "public"),
+          to: path.resolve(__dirname, "dist"),
+          globOptions: {
+            ignore: ["**/index.html"],
+          },
+        },
+      ],
+    }),
   ];
 
   const config = merge(common, {
