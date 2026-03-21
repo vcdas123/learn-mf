@@ -95,20 +95,43 @@ const sharedDependencies = {
 /**
  * Host Module Federation Configuration
  */
+// exports.getHostConfig = () => {
+//   const REMOTE_STUDENT_GRADES_URL =
+//     process.env.REMOTE_STUDENT_GRADES_URL || "http://localhost:3105";
+//   const REMOTE_ACTIVITY_LOG_URL =
+//     process.env.REMOTE_ACTIVITY_LOG_URL || "http://localhost:3106";
+//   const REMOTE_IMAGE_ANALYZER_URL =
+//     process.env.REMOTE_IMAGE_ANALYZER_URL || "http://localhost:3107";
+
+//   return {
+//     name: "host",
+//     remotes: {
+//       "student-grades": `student_grades@${REMOTE_STUDENT_GRADES_URL}/remoteEntry.js`,
+//       "activity-log": `activity_log@${REMOTE_ACTIVITY_LOG_URL}/remoteEntry.js`,
+//       // image-analyzer remote uses image_analyzer as library name (no hyphens)
+//       "image-analyzer": `image_analyzer@${REMOTE_IMAGE_ANALYZER_URL}/remoteEntry.js`,
+//     },
+//     shared: sharedDependencies,
+//   };
+// };
 exports.getHostConfig = () => {
-  const REMOTE_STUDENT_GRADES_URL =
-    process.env.REMOTE_STUDENT_GRADES_URL || "http://localhost:3105";
-  const REMOTE_ACTIVITY_LOG_URL =
-    process.env.REMOTE_ACTIVITY_LOG_URL || "http://localhost:3106";
-  const REMOTE_IMAGE_ANALYZER_URL =
-    process.env.REMOTE_IMAGE_ANALYZER_URL || "http://localhost:3107";
+  const stripTrailingSlash = url => url.replace(/\/$/, "");
+
+  const REMOTE_STUDENT_GRADES_URL = stripTrailingSlash(
+    process.env.REMOTE_STUDENT_GRADES_URL || "http://localhost:3105",
+  );
+  const REMOTE_ACTIVITY_LOG_URL = stripTrailingSlash(
+    process.env.REMOTE_ACTIVITY_LOG_URL || "http://localhost:3106",
+  );
+  const REMOTE_IMAGE_ANALYZER_URL = stripTrailingSlash(
+    process.env.REMOTE_IMAGE_ANALYZER_URL || "http://localhost:3107",
+  );
 
   return {
     name: "host",
     remotes: {
       "student-grades": `student_grades@${REMOTE_STUDENT_GRADES_URL}/remoteEntry.js`,
       "activity-log": `activity_log@${REMOTE_ACTIVITY_LOG_URL}/remoteEntry.js`,
-      // image-analyzer remote uses image_analyzer as library name (no hyphens)
       "image-analyzer": `image_analyzer@${REMOTE_IMAGE_ANALYZER_URL}/remoteEntry.js`,
     },
     shared: sharedDependencies,
@@ -118,7 +141,7 @@ exports.getHostConfig = () => {
 /**
  * Remote Module Federation Configuration
  */
-exports.getRemoteConfig = (remoteName) => {
+exports.getRemoteConfig = remoteName => {
   const config = {
     name: remoteName,
     filename: "remoteEntry.js",
