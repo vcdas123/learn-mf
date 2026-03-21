@@ -19,7 +19,9 @@ import "./styles/globals.css";
 
 // Architecture Guide Components
 const ArchitectureGuide = React.lazy(() => import("./pages/ArchitectureGuide"));
-const StateManagementGuide = React.lazy(() => import("./pages/StateManagementGuide"));
+const StateManagementGuide = React.lazy(
+  () => import("./pages/StateManagementGuide"),
+);
 const StylingGuide = React.lazy(() => import("./pages/StylingGuide"));
 
 /**
@@ -36,8 +38,8 @@ function App(): React.ReactElement {
   const location = useLocation();
   const dispatch = useDispatch();
   const mode = useSelector((state: RootState) => state.app.theme);
-  
-  // System theme preference detection
+
+  // System theme preference detection - based on user’s OS-level setting
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   // Sync with system theme on initial load if no preference is saved
@@ -56,34 +58,49 @@ function App(): React.ReactElement {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: "100vh", bgcolor: "background.default", transition: "background-color 0.3s ease" }}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          transition: "background-color 0.3s ease",
+        }}
+      >
         <Navigation />
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<HomePage />} />
-            
-            {/* Architecture Guide Routes */}
-            <Route path="/guide/architecture" element={
-              <Suspense fallback={<RemoteLoading moduleName="Guide" />}>
-                <ArchitectureGuide />
-              </Suspense>
-            } />
-            <Route path="/guide/state" element={
-              <Suspense fallback={<RemoteLoading moduleName="Guide" />}>
-                <StateManagementGuide />
-              </Suspense>
-            } />
-            <Route path="/guide/styling" element={
-              <Suspense fallback={<RemoteLoading moduleName="Guide" />}>
-                <StylingGuide />
-              </Suspense>
-            } />
 
-            {remoteRoutes.map((route) => {
+            {/* Architecture Guide Routes */}
+            <Route
+              path="/guide/architecture"
+              element={
+                <Suspense fallback={<RemoteLoading moduleName="Guide" />}>
+                  <ArchitectureGuide />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/guide/state"
+              element={
+                <Suspense fallback={<RemoteLoading moduleName="Guide" />}>
+                  <StateManagementGuide />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/guide/styling"
+              element={
+                <Suspense fallback={<RemoteLoading moduleName="Guide" />}>
+                  <StylingGuide />
+                </Suspense>
+              }
+            />
+
+            {remoteRoutes.map(route => {
               const RemoteComponent = remoteComponentMap[route.moduleName];
               if (!RemoteComponent) {
                 console.warn(
-                  `No remote component found for module: ${route.moduleName}`
+                  `No remote component found for module: ${route.moduleName}`,
                 );
                 return null;
               }
