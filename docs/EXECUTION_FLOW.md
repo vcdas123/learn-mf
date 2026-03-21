@@ -56,7 +56,9 @@ This document explains the step-by-step execution flow for both modes and the we
       name: "host",
       remotes: {
         // Maps module name to remoteEntry.js URL
-        "activity-log": "activity_log@http://localhost:3106/remoteEntry.js"
+        "activity-log": "activity_log@http://localhost:3106/remoteEntry.js",
+        "student-grades": "student_grades@http://localhost:3105/remoteEntry.js",
+        "image-analyzer": "image_analyzer@http://localhost:3107/remoteEntry.js"
       },
       shared: { /* shared dependencies */ }
     })
@@ -295,7 +297,9 @@ exposes: {
 ```javascript
 // host/webpack.config.js
 remotes: {
-  "activity-log": "activity_log@http://localhost:3106/remoteEntry.js"
+  "activity-log": "activity_log@http://localhost:3106/remoteEntry.js",
+  "student-grades": "student_grades@http://localhost:3105/remoteEntry.js",
+  "image-analyzer": "image_analyzer@http://localhost:3107/remoteEntry.js"
 }
 ```
 
@@ -397,7 +401,9 @@ module.exports = (env, argv) => {
         name: "host",
         remotes: {
           // Maps module name to remoteEntry.js URL
-          "activity-log": "activity_log@http://localhost:3106/remoteEntry.js"
+          "activity-log": "activity_log@http://localhost:3106/remoteEntry.js",
+          "student-grades": "student_grades@http://localhost:3105/remoteEntry.js",
+          "image-analyzer": "image_analyzer@http://localhost:3107/remoteEntry.js"
         },
         shared: { /* ... */ }
       })

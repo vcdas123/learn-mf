@@ -32,7 +32,7 @@ import {
 import { useGradeStore } from "../store/useGradeStore";
 import { useSelector, useDispatch } from "../hooks/useReduxStore";
 
-function GradeList(): React.ReactElement {
+function StudentGradesList(): React.ReactElement {
   const navigate = useNavigate();
 
   // Using Zustand for module-specific state
@@ -77,7 +77,7 @@ function GradeList(): React.ReactElement {
           sx={{
             p: 4,
             mb: 4,
-            background: "linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%)",
+            background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%)" : "linear-gradient(135deg, #1e293b 0%, #1e1b4b 100%)",
             borderRadius: 3,
             border: "1px solid",
             borderColor: "divider",
@@ -102,7 +102,7 @@ function GradeList(): React.ReactElement {
               variant="h5"
               sx={{
                 fontWeight: 700,
-                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -116,7 +116,7 @@ function GradeList(): React.ReactElement {
                 size="medium"
                 onClick={handleIncrement}
                 sx={{
-                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                   boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
                 }}
               >
@@ -141,7 +141,7 @@ function GradeList(): React.ReactElement {
           }}
         >
           <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
-            Grade List
+            Student Grades
           </Typography>
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             <Button
@@ -164,11 +164,11 @@ function GradeList(): React.ReactElement {
                 startIcon={<AddIcon />}
                 onClick={() => navigate("add")}
                 sx={{
-                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                   boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
                 }}
               >
-                Add New Grade
+                Add New Record
               </Button>
             </motion.div>
           </Box>
@@ -177,7 +177,7 @@ function GradeList(): React.ReactElement {
         {/* Search and Filter */}
         <Box sx={{ mb: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
           <TextField
-            placeholder="Search grades..."
+            placeholder="Search records..."
             variant="outlined"
             size="small"
             value={searchQuery}
@@ -225,7 +225,7 @@ function GradeList(): React.ReactElement {
               startIcon={<AddIcon />}
               onClick={() => navigate("add")}
               sx={{
-                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                 boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
               }}
             >
@@ -245,7 +245,7 @@ function GradeList(): React.ReactElement {
           >
             <Table>
               <TableHead>
-                <TableRow sx={{ background: "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)" }}>
+                <TableRow sx={{ background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)" : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)" }}>
                   <TableCell sx={{ fontWeight: 700 }}>Name</TableCell>
                   <TableCell sx={{ fontWeight: 700 }}>Student</TableCell>
                   <TableCell sx={{ fontWeight: 700 }}>Subject</TableCell>
@@ -336,4 +336,4 @@ function GradeList(): React.ReactElement {
   );
 }
 
-export default GradeList;
+export default StudentGradesList;

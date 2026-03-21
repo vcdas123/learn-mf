@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import { useGradeStore } from "../store/useGradeStore";
 
-function GradeStatistics(): React.ReactElement {
+function StudentGradesStatistics(): React.ReactElement {
   const grades = useGradeStore((state) => state.grades);
   const averageScore = useGradeStore((state) => state.averageScore());
   const highGrades = useGradeStore((state) => state.highGrades());
@@ -45,7 +45,7 @@ function GradeStatistics(): React.ReactElement {
 
   // Find highest and lowest scores
   const highestGrade = grades.reduce((max, g) => (g.score > max.score ? g : max), grades[0]);
-  const lowestGrade = grades.reduce((min, g) => (g.score < min.score ? g : min), grades[0]);
+  const lowestGrade = grades.reduce((min, g) => (min.score < g.score ? g : min), grades[0]);
 
   const getScoreColor = (score: number) => {
     if (score >= 90) return "success";
@@ -60,7 +60,7 @@ function GradeStatistics(): React.ReactElement {
         component="h2"
         sx={{ mb: 4, fontWeight: 700 }}
       >
-        📈 Grade Statistics
+        📈 Performance Analytics
       </Typography>
 
       {/* Overall Statistics */}
@@ -76,7 +76,7 @@ function GradeStatistics(): React.ReactElement {
                 {averageScore}%
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Average Score
+                Average Success Rate
               </Typography>
             </Paper>
           </motion.div>
@@ -94,7 +94,7 @@ function GradeStatistics(): React.ReactElement {
                 {highestGrade?.score || 0}%
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Highest Score
+                Top Performance
               </Typography>
               {highestGrade && (
                 <Typography variant="caption" display="block" sx={{ mt: 1 }}>
@@ -117,7 +117,7 @@ function GradeStatistics(): React.ReactElement {
                 {lowestGrade?.score || 0}%
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Lowest Score
+                Needs Review
               </Typography>
               {lowestGrade && (
                 <Typography variant="caption" display="block" sx={{ mt: 1 }}>
@@ -134,12 +134,12 @@ function GradeStatistics(): React.ReactElement {
         <Grid item xs={12} md={6}>
           <Paper elevation={2} sx={{ p: 3 }}>
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-              Grade Distribution
+              Performance Tiers
             </Typography>
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Chip label="High" color="success" size="small" />
+                  <Chip label="Excellent" color="success" size="small" />
                   <Typography variant="body2">≥90%</Typography>
                 </Box>
                 <Typography variant="body2" fontWeight={600}>
@@ -156,7 +156,7 @@ function GradeStatistics(): React.ReactElement {
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Chip label="Medium" color="warning" size="small" />
+                  <Chip label="Average" color="warning" size="small" />
                   <Typography variant="body2">70-89%</Typography>
                 </Box>
                 <Typography variant="body2" fontWeight={600}>
@@ -173,7 +173,7 @@ function GradeStatistics(): React.ReactElement {
             <Box>
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Chip label="Low" color="error" size="small" />
+                  <Chip label="Below" color="error" size="small" />
                   <Typography variant="body2">Less than 70%</Typography>
                 </Box>
                 <Typography variant="body2" fontWeight={600}>
@@ -194,7 +194,7 @@ function GradeStatistics(): React.ReactElement {
         <Grid item xs={12} md={6}>
           <Paper elevation={2} sx={{ p: 3 }}>
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-              Average by Subject
+              Performance by Category
             </Typography>
             {subjectAverages.length > 0 ? (
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -205,7 +205,7 @@ function GradeStatistics(): React.ReactElement {
                         {subject}
                       </Typography>
                       <Typography variant="body2" fontWeight={600}>
-                        {average}% ({count} grades)
+                        {average}% ({count} entries)
                       </Typography>
                     </Box>
                     <LinearProgress
@@ -219,7 +219,7 @@ function GradeStatistics(): React.ReactElement {
               </Box>
             ) : (
               <Typography variant="body2" color="text.secondary">
-                No subject data available
+                No categorical data available
               </Typography>
             )}
           </Paper>
@@ -229,5 +229,4 @@ function GradeStatistics(): React.ReactElement {
   );
 }
 
-export default GradeStatistics;
-
+export default StudentGradesStatistics;

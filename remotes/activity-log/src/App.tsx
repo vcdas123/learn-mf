@@ -16,7 +16,10 @@ function ActivityLogApp(): React.ReactElement {
           elevation={0}
           sx={{
             p: { xs: 4, md: 6 },
-            background: "linear-gradient(135deg, #fafafa 0%, #ffffff 100%)",
+            background: (theme) => 
+              theme.palette.mode === "light" 
+                ? "linear-gradient(135deg, #fafafa 0%, #ffffff 100%)"
+                : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
             borderRadius: 4,
             mb: 4,
             border: "1px solid",
@@ -37,7 +40,7 @@ function ActivityLogApp(): React.ReactElement {
               sx={{
                 mb: 2,
                 fontWeight: 700,
-                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",

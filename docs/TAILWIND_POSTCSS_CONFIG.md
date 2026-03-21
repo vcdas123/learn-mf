@@ -175,7 +175,7 @@ PostCSS loader resolves the config file automatically:
    - Parent directories (up to root)
 
 2. Since we're building from `host/` or `remotes/*/`:
-   - Webpack runs from: `host/` or `remotes/grade/`
+   - Webpack runs from: `host/` or `remotes/student-grades/`
    - PostCSS looks up: `../sharedConfigs/postcss.config.js` (relative to webpack config)
 
 ### Tailwind Config Resolution
@@ -218,7 +218,7 @@ Tailwind CSS plugin resolves config automatically:
 ```tsx
 // remotes/grade/src/pages/List.tsx
 <div className="bg-blue-500 text-white p-4">
-  Grade List
+  Student Grades
 </div>
 ```
 

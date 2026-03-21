@@ -83,10 +83,10 @@ export default RemoteApp;
  * Example route definitions (src/routes.tsx):
  *
  * export const routes = [
- *   { path: "/", component: GradeList },        // Matches /grades/
- *   { path: "add", component: GradeCreate },   // Matches /grades/add
- *   { path: ":id", component: GradeDetail },   // Matches /grades/:id
- *   { path: ":id/edit", component: GradeEdit }, // Matches /grades/:id/edit
+ *   { path: "/", component: StudentGradesList },        // Matches /grades/
+ *   { path: "add", component: StudentGradesCreate },   // Matches /grades/add
+ *   { path: ":id", component: StudentGradesDetail },   // Matches /grades/:id
+ *   { path: ":id/edit", component: StudentGradesEdit }, // Matches /grades/:id/edit
  * ];
  *
  * export const defaultRoute = "/";

@@ -1,10 +1,10 @@
 import React from "react";
-import AiVisionDashboard from "./pages/Dashboard";
-import AiVisionAnalyze from "./pages/Analyze";
+import ImageAnalyzerDashboard from "./pages/Dashboard";
+import ImageAnalyzerAnalyze from "./pages/Analyze";
 
 export const routes = [
-  { path: "/", component: AiVisionDashboard },
-  { path: "analyze", component: AiVisionAnalyze },
+  { path: "/", component: ImageAnalyzerDashboard },
+  { path: "analyze", component: ImageAnalyzerAnalyze },
 ];
 
 export const defaultRoute = "/";

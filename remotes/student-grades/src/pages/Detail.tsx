@@ -18,7 +18,7 @@ import {
 import { motion } from "framer-motion";
 import { useGradeStore } from "../store/useGradeStore";
 
-function GradeDetail(): React.ReactElement {
+function StudentGradesDetail(): React.ReactElement {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const getGradeById = useGradeStore((state) => state.getGradeById);
@@ -34,9 +34,9 @@ function GradeDetail(): React.ReactElement {
 
   const handleDelete = () => {
     if (!id) return;
-    if (window.confirm("Are you sure you want to delete this grade?")) {
+    if (window.confirm("Are you sure you want to delete this record?")) {
       removeGrade(id);
-      navigate("/");
+      navigate("..");
     }
   };
 
@@ -44,9 +44,9 @@ function GradeDetail(): React.ReactElement {
     return (
       <Box>
         <Alert severity="error" sx={{ mb: 2 }}>
-          Grade not found
+          Record not found
         </Alert>
-        <Button variant="outlined" onClick={() => navigate("/")}>
+        <Button variant="outlined" onClick={() => navigate("..")}>
           Back to List
         </Button>
       </Box>
@@ -60,21 +60,21 @@ function GradeDetail(): React.ReactElement {
         animate={{ opacity: 1, y: 0 }}
       >
         <Typography variant="h5" component="h2" sx={{ mb: 4, fontWeight: 700 }}>
-          Grade Details
+          Student Performance Details
         </Typography>
         <Paper elevation={2} sx={{ p: 4, maxWidth: 800 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                 <Typography variant="caption" color="text.secondary">
-                  Grade ID
+                  Record ID
                 </Typography>
                 <Box sx={{ display: "flex", gap: 2 }}>
                   <Button
                     variant="outlined"
                     size="small"
                     startIcon={<EditIcon />}
-                    onClick={() => navigate(`/${id}/edit`)}
+                    onClick={() => navigate("edit")}
                   >
                     Edit
                   </Button>
@@ -100,7 +100,7 @@ function GradeDetail(): React.ReactElement {
 
             <Grid item xs={12} md={6}>
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
-                Grade Name
+                Entry Name
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {grade.name}
@@ -163,7 +163,7 @@ function GradeDetail(): React.ReactElement {
                     elevation={0}
                     sx={{
                       p: 2,
-                      bgcolor: "grey.50",
+                      bgcolor: (theme) => theme.palette.mode === "light" ? "grey.50" : "rgba(255,255,255,0.05)",
                       borderRadius: 1,
                     }}
                   >
@@ -180,9 +180,9 @@ function GradeDetail(): React.ReactElement {
               <Button
                 variant="contained"
                 startIcon={<ArrowBackIcon />}
-                onClick={() => navigate("/")}
+                onClick={() => navigate("..")}
                 sx={{
-                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                 }}
               >
                 Back to List
@@ -195,4 +195,4 @@ function GradeDetail(): React.ReactElement {
   );
 }
 
-export default GradeDetail;
+export default StudentGradesDetail;

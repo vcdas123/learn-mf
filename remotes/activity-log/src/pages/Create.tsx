@@ -12,11 +12,13 @@ import {
 } from "@mui/material";
 import { Save as SaveIcon, Cancel as CancelIcon } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import { useGradeStore } from "../store/useGradeStore";
+import { useDispatch } from "../hooks/useReduxStore";
+import { useActivityStore } from "../store/useActivityStore";
 
-function StudentGradesCreate(): React.ReactElement {
+function ActivityLogCreate(): React.ReactElement {
   const navigate = useNavigate();
-  const addGrade = useGradeStore((state) => state.addGrade);
+  const dispatch = useDispatch();
+  const addLog = useActivityStore((state) => state.addLog);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,33 +26,33 @@ function StudentGradesCreate(): React.ReactElement {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
-    const score = Number(formData.get("score"));
-    const studentName = formData.get("studentName") as string;
-    const subject = formData.get("subject") as string;
+    const title = formData.get("title") as string;
+    const status = formData.get("status") as "active" | "completed" | "draft";
+    const description = formData.get("description") as string;
     const date = formData.get("date") as string;
-    const notes = formData.get("notes") as string;
 
-    if (!name || score === null) {
-      setError("Name and score are required");
+    if (!title || !status) {
+      setError("Title and status are required");
       return;
     }
 
-    if (score < 0 || score > 100) {
-      setError("Score must be between 0 and 100");
-      return;
-    }
-
-    addGrade({
-      name,
-      score,
-      studentName: studentName || undefined,
-      subject: subject || undefined,
-      date: date || undefined,
-      notes: notes || undefined,
+    // Save to Zustand store (which handles localStorage)
+    addLog({
+      title,
+      status,
+      description,
+      date: date || new Date().toISOString().split("T")[0],
     });
 
-    navigate(".."); // Navigate back to list
+    dispatch({
+      type: "app/addNotification",
+      payload: {
+        message: `New activity log "${title}" created successfully!`,
+        type: "success",
+      },
+    });
+
+    navigate(".."); // Navigate back to module list
   };
 
   return (
@@ -58,11 +60,19 @@ function StudentGradesCreate(): React.ReactElement {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
         <Typography variant="h5" component="h2" sx={{ mb: 4, fontWeight: 700 }}>
-          Add New Record
+          Create New Activity Log
         </Typography>
-        <Paper elevation={2} sx={{ p: 4, maxWidth: 800 }}>
+        <Paper 
+          elevation={2} 
+          sx={{ 
+            p: 4, 
+            maxWidth: 800, 
+            background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #fafafa 0%, #ffffff 100%)" : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)" 
+          }}
+        >
           {error && (
             <Alert severity="error" sx={{ mb: 3 }}>
               {error}
@@ -73,9 +83,8 @@ function StudentGradesCreate(): React.ReactElement {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
-                  name="name"
-                  label="Entry Name"
-                  placeholder="e.g. Midterm Assessment"
+                  name="title"
+                  label="Log Title"
                   fullWidth
                   required
                   variant="outlined"
@@ -85,41 +94,17 @@ function StudentGradesCreate(): React.ReactElement {
 
               <Grid item xs={12} md={6}>
                 <TextField
-                  name="score"
-                  label="Score"
-                  type="number"
+                  select
+                  name="status"
+                  label="Status"
                   fullWidth
                   required
-                  variant="outlined"
-                  inputProps={{ min: 0, max: 100, step: 0.1 }}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  name="studentName"
-                  label="Student Name"
-                  fullWidth
-                  variant="outlined"
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  select
-                  name="subject"
-                  label="Subject"
-                  fullWidth
-                  defaultValue=""
+                  defaultValue="active"
                   variant="outlined"
                 >
-                  <MenuItem value="">None</MenuItem>
-                  <MenuItem value="Math">Mathematics</MenuItem>
-                  <MenuItem value="Science">Science</MenuItem>
-                  <MenuItem value="English">English</MenuItem>
-                  <MenuItem value="History">History</MenuItem>
-                  <MenuItem value="Physics">Physics</MenuItem>
-                  <MenuItem value="Chemistry">Chemistry</MenuItem>
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="completed">Completed</MenuItem>
+                  <MenuItem value="draft">Draft</MenuItem>
                 </TextField>
               </Grid>
 
@@ -137,8 +122,8 @@ function StudentGradesCreate(): React.ReactElement {
 
               <Grid item xs={12}>
                 <TextField
-                  name="notes"
-                  label="Notes"
+                  name="description"
+                  label="Description"
                   fullWidth
                   multiline
                   rows={4}
@@ -157,7 +142,7 @@ function StudentGradesCreate(): React.ReactElement {
                         "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                     }}
                   >
-                    Add Record
+                    Save Log
                   </Button>
                   <Button
                     type="button"
@@ -177,4 +162,4 @@ function StudentGradesCreate(): React.ReactElement {
   );
 }
 
-export default StudentGradesCreate;
+export default ActivityLogCreate;

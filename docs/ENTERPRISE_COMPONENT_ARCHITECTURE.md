@@ -116,13 +116,13 @@ This architecture ensures React context flows naturally through a single compone
 │              └─ <BrowserRouter> ← ONE BrowserRouter     │
 │                   └─ <Routes>                           │
 │                        ├─ <Route path="/login" />       │
-│                        ├─ <Route path="/grades/*">      │
-│                        │    └─ <GradeRemote /> ← Lazy  │
+│                        ├─ <Route path="/student-grades/*"> │
+│                        │    └─ <StudentGradesRemote /> ← Lazy │
 │                        │         └─ <Routes> ← Nested  │
 │                        │              ├─ <Route path="/" /> │
 │                        │              └─ <Route path="add" />│
-│                        └─ <Route path="/logsheet/*">   │
-│                             └─ <LogSheetRemote />       │
+│                        └─ <Route path="/activity-log/*"> │
+│                             └─ <ActivityLogRemote />    │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -157,35 +157,31 @@ This architecture ensures React context flows naturally through a single compone
 ### Host Application
 
 ```
-agnipariksha/
-├── src/
-│   ├── index.tsx                    ← ONE createRoot() call
-│   ├── App.tsx                      ← ONE BrowserRouter
-│   ├── routes/
-│   │   └── index.tsx                ← Top-level route definitions
-│   └── store/
-│       └── index.ts                 ← Redux store
-└── package.json
-```
-
-### Remote Application
-
-```
-apps/grade/
-├── src/
-│   ├── App.tsx                      ← Default export (React component) - PRODUCTION
-│   ├── dev.tsx                      ← Dev-only entry (createRoot + BrowserRouter)
-│   ├── routes.tsx                   ← Nested route definitions (relative paths)
-│   ├── pages/                       ← Page components
-│   │   ├── List.tsx
-│   │   ├── Create.tsx
-│   │   └── Edit.tsx
-│   └── providers/                   ← Module-specific providers
-│       ├── ThemeProvider.tsx
-│       └── InternalStateProvider.tsx
-├── public/
-│   └── index.html                   ← Dev-only HTML (for standalone mode)
-└── package.json
+learn-mf/
+├── host/
+│   ├── src/
+│   │   ├── index.tsx                ← ONE createRoot() call
+│   │   ├── App.tsx                  ← Top-level routes
+│   │   ├── routes/
+│   │   │   └── remoteRoutes.ts      ← Remote route definitions
+│   │   └── store/
+│   │       └── index.ts             ← Redux store
+│   └── package.json
+└── remotes/
+    └── student-grades/
+        ├── src/
+        │   ├── App.tsx              ← Default export (React component) - PRODUCTION
+        │   ├── dev.tsx              ← Dev-only entry (createRoot + BrowserRouter)
+        │   ├── routes.tsx           ← Nested route definitions (relative paths)
+        │   ├── pages/               ← Page components
+        │   │   ├── List.tsx
+        │   │   ├── Create.tsx
+        │   │   └── Detail.tsx
+        │   └── store/               ← Module-specific stores
+        │       └── useGradeStore.ts
+        ├── public/
+        │   └── index.html           ← Dev-only HTML (for standalone mode)
+        └── package.json
 ```
 
 ---
@@ -226,11 +222,7 @@ root.render(
 ```tsx
 import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-
-// Lazy load remotes as React components (NOT mount functions)
-const GradeRemote = lazy(() => import("grade/App"));
-const LogSheetRemote = lazy(() => import("dynamiclogsheet/App"));
-const AiVisionRemote = lazy(() => import("ai-vision/App"));
+import { StudentGradesRemote, ActivityLogRemote, ImageAnalyzerRemote } from "./routes/lazyRemotes";
 
 function App(): React.ReactElement {
   return (
@@ -241,20 +233,24 @@ function App(): React.ReactElement {
 
       {/* Remote module routes - host owns base path */}
       <Route
-        path="/grades/*"
+        path="/student-grades/*"
         element={
-          <Suspense fallback={<Loading />}>
-            <GradeRemote />
-          </Suspense>
+          <RemoteErrorBoundary>
+            <Suspense fallback={<RemoteLoading />}>
+              <StudentGradesRemote />
+            </Suspense>
+          </RemoteErrorBoundary>
         }
       />
 
       <Route
-        path="/logsheet/*"
+        path="/activity-log/*"
         element={
-          <Suspense fallback={<Loading />}>
-            <LogSheetRemote />
-          </Suspense>
+          <RemoteErrorBoundary>
+            <Suspense fallback={<RemoteLoading />}>
+              <ActivityLogRemote />
+            </Suspense>
+          </RemoteErrorBoundary>
         }
       />
 
@@ -266,13 +262,12 @@ function App(): React.ReactElement {
 export default App;
 ```
 
-### Remote Application (`apps/grade/src/App.tsx`)
+### Remote Application (`remotes/student-grades/src/App.tsx`)
 
 ```tsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { routes, defaultRoute } from "./routes";
-import { ThemeProvider } from "./providers/ThemeProvider";
 
 /**
  * Remote Application Component
@@ -283,34 +278,31 @@ import { ThemeProvider } from "./providers/ThemeProvider";
  * ✅ Uses relative paths only
  * ✅ Used by BOTH host (production) and dev entry (development)
  */
-function GradeApp(): React.ReactElement {
+function StudentGradesApp(): React.ReactElement {
   // ✅ React Router hooks work automatically
   // const navigate = useNavigate();
   // const location = useLocation();
   // const params = useParams();
 
   return (
-    <ThemeProvider>
-      {/* ✅ Routes/Route - inherits context from host */}
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={<route.component />}
-          />
-        ))}
-        <Route path="*" element={<Navigate to={defaultRoute} replace />} />
-      </Routes>
-    </ThemeProvider>
+    <Routes>
+      {routes.map((route) => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={<route.component />}
+        />
+      ))}
+      <Route path="*" element={<Navigate to={defaultRoute} replace />} />
+    </Routes>
   );
 }
 
 // ✅ Default export - host imports this
-export default GradeApp;
+export default StudentGradesApp;
 ```
 
-### Remote Dev Entry (`apps/grade/src/dev.tsx`)
+### Remote Dev Entry (`remotes/student-grades/src/dev.tsx`)
 
 ```tsx
 import React from "react";
@@ -346,140 +338,98 @@ root.render(
 );
 ```
 
-### Remote Routes (`apps/grade/src/routes.tsx`)
+### Remote Routes (`remotes/student-grades/src/routes.tsx`)
 
 ```tsx
 import React from "react";
-import GradeList from "./pages/List";
-import GradeCreate from "./pages/Create";
-import GradeEdit from "./pages/Edit";
+import StudentGradesList from "./pages/List";
+import StudentGradesCreate from "./pages/Create";
+import StudentGradesDetail from "./pages/Detail";
 
 // ✅ All paths are RELATIVE (no leading '/')
-// ✅ These are nested under /grades/* (defined by host)
+// ✅ These are nested under /student-grades/* (defined by host)
 export const routes = [
-  { path: "/", component: GradeList },        // Matches /grades/
-  { path: "add", component: GradeCreate },   // Matches /grades/add
-  { path: ":id", component: GradeDetail },   // Matches /grades/:id
-  { path: ":id/edit", component: GradeEdit }, // Matches /grades/:id/edit
+  { path: "/", component: StudentGradesList },        // Matches /student-grades/
+  { path: "add", component: StudentGradesCreate },   // Matches /student-grades/add
+  { path: ":id", component: StudentGradesDetail },   // Matches /student-grades/:id
 ];
 
 export const defaultRoute = "/";
 ```
 
-### Remote Page Component (`apps/grade/src/pages/List.tsx`)
+### Remote Page Component (`remotes/student-grades/src/pages/List.tsx`)
 
 ```tsx
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-function GradeList(): React.ReactElement {
+function StudentGradesList(): React.ReactElement {
   // ✅ Hooks work automatically - we're inside host's BrowserRouter
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleAdd = () => {
     // ✅ Navigate using relative path
-    navigate("add"); // Goes to /grades/add
+    navigate("add"); // Goes to /student-grades/add
     // OR absolute path
-    navigate("/grades/add"); // Also works
+    navigate("/student-grades/add"); // Also works
   };
 
   return (
     <div>
-      <h1>Grade List</h1>
+      <h1>Student Grades</h1>
       <button onClick={handleAdd}>Add Grade</button>
     </div>
   );
 }
 
-export default GradeList;
+export default StudentGradesList;
 ```
 
 ---
 
 ## 🔧 Module Federation Configuration
 
-### Host Webpack Config
+### Host Module Federation Config (`sharedConfigs/webpack.module-federation.js`)
 
 ```js
-const ModuleFederationPlugin = require("@module-federation/webpack");
+exports.getHostConfig = () => {
+  const REMOTE_STUDENT_GRADES_URL = process.env.REMOTE_STUDENT_GRADES_URL || "http://localhost:3105";
+  const REMOTE_ACTIVITY_LOG_URL = process.env.REMOTE_ACTIVITY_LOG_URL || "http://localhost:3106";
+  const REMOTE_IMAGE_ANALYZER_URL = process.env.REMOTE_IMAGE_ANALYZER_URL || "http://localhost:3107";
 
-module.exports = {
-  plugins: [
-    new ModuleFederationPlugin({
-      name: "host",
-      remotes: {
-        grade: "grade@http://localhost:3105/remoteEntry.js",
-        dynamiclogsheet: "dynamiclogsheet@http://localhost:3106/remoteEntry.js",
-        "ai-vision": "ai-vision@http://localhost:3107/remoteEntry.js",
-      },
-      shared: {
-        react: { singleton: true, requiredVersion: "^18.0.0" },
-        "react-dom": { singleton: true, requiredVersion: "^18.0.0" },
-        "react-router-dom": { singleton: true, requiredVersion: "^6.0.0" },
-        "react-redux": { singleton: true, requiredVersion: "^8.0.0" },
-      },
-    }),
-  ],
-  entry: {
-    main: "./src/index.tsx", // Host entry with createRoot()
-  },
+  return {
+    name: "host",
+    remotes: {
+      "student-grades": `student_grades@${REMOTE_STUDENT_GRADES_URL}/remoteEntry.js`,
+      "activity-log": `activity_log@${REMOTE_ACTIVITY_LOG_URL}/remoteEntry.js`,
+      "image-analyzer": `image_analyzer@${REMOTE_IMAGE_ANALYZER_URL}/remoteEntry.js`,
+    },
+    shared: sharedDependencies,
+  };
 };
 ```
 
-### Remote Webpack Config (Development)
+### Remote Module Federation Config (`sharedConfigs/webpack.module-federation.js`)
 
 ```js
-const ModuleFederationPlugin = require("@module-federation/webpack");
+exports.getRemoteConfig = (remoteName) => {
+  const config = {
+    name: remoteName,
+    filename: "remoteEntry.js",
+    exposes: {
+      "./App": "./src/App.tsx", // ✅ Expose App component, NOT dev entry
+    },
+    shared: sharedDependencies,
+  };
 
-module.exports = {
-  mode: "development",
-  plugins: [
-    new ModuleFederationPlugin({
-      name: "grade",
-      filename: "remoteEntry.js",
-      exposes: {
-        "./App": "./src/App.tsx", // ✅ Expose App component, NOT dev entry
-      },
-      shared: {
-        react: { singleton: true, requiredVersion: "^18.0.0" },
-        "react-dom": { singleton: true, requiredVersion: "^18.0.0" },
-        "react-router-dom": { singleton: true, requiredVersion: "^6.0.0" },
-        "react-redux": { singleton: true, requiredVersion: "^8.0.0" },
-      },
-    }),
-  ],
-  entry: {
-    dev: "./src/dev.tsx", // ✅ Dev-only entry for standalone development
-  },
-};
-```
+  // Handle hyphenated names for library identifier
+  if (remoteName.includes("-")) {
+    const validIdentifier = remoteName.replace(/-/g, "_");
+    config.library = { type: "var", name: validIdentifier };
+  }
 
-### Remote Webpack Config (Production)
-
-```js
-const ModuleFederationPlugin = require("@module-federation/webpack");
-
-module.exports = {
-  mode: "production",
-  plugins: [
-    new ModuleFederationPlugin({
-      name: "grade",
-      filename: "remoteEntry.js",
-      exposes: {
-        "./App": "./src/App.tsx", // ✅ Expose App component
-      },
-      shared: {
-        react: { singleton: true, requiredVersion: "^18.0.0" },
-        "react-dom": { singleton: true, requiredVersion: "^18.0.0" },
-        "react-router-dom": { singleton: true, requiredVersion: "^6.0.0" },
-        "react-redux": { singleton: true, requiredVersion: "^8.0.0" },
-      },
-    }),
-  ],
-  entry: {
-    // ✅ No dev entry in production - App is exposed via Module Federation
-  },
+  return config;
 };
 ```
 
@@ -544,7 +494,7 @@ module.exports = {
 
 ```tsx
 // ❌ WRONG - Remote creates its own root in production
-// apps/grade/src/App.tsx
+// remotes/student-grades/src/App.tsx
 import { createRoot } from "react-dom/client";
 const root = createRoot(container);
 root.render(<App />);
@@ -552,8 +502,8 @@ root.render(<App />);
 
 ```tsx
 // ✅ CORRECT - Remote exports component
-// apps/grade/src/App.tsx
-export default function GradeApp() {
+// remotes/student-grades/src/App.tsx
+export default function StudentGradesApp() {
   return <Routes>...</Routes>;
 }
 ```
@@ -562,8 +512,8 @@ export default function GradeApp() {
 
 ```tsx
 // ❌ WRONG - Remote creates BrowserRouter in production
-// apps/grade/src/App.tsx
-function GradeApp() {
+// remotes/student-grades/src/App.tsx
+function StudentGradesApp() {
   return (
     <BrowserRouter>
       <Routes>...</Routes>
@@ -574,11 +524,11 @@ function GradeApp() {
 
 ```tsx
 // ✅ CORRECT - Remote uses Routes only
-// apps/grade/src/App.tsx
-function GradeApp() {
+// remotes/student-grades/src/App.tsx
+function StudentGradesApp() {
   return (
     <Routes>
-      <Route path="/" element={<GradeList />} />
+      <Route path="/" element={<StudentGradesList />} />
     </Routes>
   );
 }
@@ -588,7 +538,7 @@ function GradeApp() {
 
 ```tsx
 // ❌ WRONG - Remote exposes mount function
-// apps/grade/src/mount.tsx
+// remotes/student-grades/src/mount.tsx
 export async function mount(container, props) {
   const root = createRoot(container);
   root.render(<App />);
@@ -597,8 +547,8 @@ export async function mount(container, props) {
 
 ```tsx
 // ✅ CORRECT - Remote exports component
-// apps/grade/src/App.tsx
-export default function GradeApp() {
+// remotes/student-grades/src/App.tsx
+export default function StudentGradesApp() {
   return <Routes>...</Routes>;
 }
 ```
@@ -607,12 +557,12 @@ export default function GradeApp() {
 
 ```tsx
 // ❌ WRONG - Passing context manually
-<GradeRemote location={location} navigate={navigate} />
+<StudentGradesRemote location={location} navigate={navigate} />
 ```
 
 ```tsx
 // ✅ CORRECT - Context flows naturally
-<GradeRemote />
+<StudentGradesRemote />
 ```
 
 ### ❌ Mistake 5: Absolute Paths in Remotes
@@ -620,16 +570,16 @@ export default function GradeApp() {
 ```tsx
 // ❌ WRONG - Absolute paths
 export const routes = [
-  { path: "/grades/", component: GradeList },
-  { path: "/grades/add", component: GradeCreate },
+  { path: "/student-grades/", component: StudentGradesList },
+  { path: "/student-grades/add", component: StudentGradesCreate },
 ];
 ```
 
 ```tsx
 // ✅ CORRECT - Relative paths
 export const routes = [
-  { path: "/", component: GradeList },      // /grades/
-  { path: "add", component: GradeCreate }, // /grades/add
+  { path: "/", component: StudentGradesList },           // /student-grades/
+  { path: "add", component: StudentGradesCreate },      // /student-grades/add
 ];
 ```
 
@@ -637,12 +587,12 @@ export const routes = [
 
 ```tsx
 // ❌ WRONG - Importing dev entry in production
-import App from "grade/dev";
+import App from "student-grades/dev";
 ```
 
 ```tsx
 // ✅ CORRECT - Importing App component
-import App from "grade/App";
+import App from "student-grades/App";
 ```
 
 ---

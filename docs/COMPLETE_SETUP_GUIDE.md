@@ -449,7 +449,7 @@ npm run dev:image-analyzer &
 ### Testing Standalone Mode
 
 1. Start only the remote server
-2. Navigate to http://localhost:3107 (for AI Vision)
+2. Navigate to http://localhost:3107 (for Image Analyzer)
 3. Verify it works independently
 
 ## 🏭 Production Deployment

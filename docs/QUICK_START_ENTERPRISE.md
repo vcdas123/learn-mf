@@ -37,26 +37,26 @@ import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 // Lazy load remotes as components
-const GradeRemote = lazy(() => import("grade/App"));
-const LogSheetRemote = lazy(() => import("dynamiclogsheet/App"));
+const StudentGradesRemote = lazy(() => import("student-grades/App"));
+const ActivityLogRemote = lazy(() => import("activity-log/App"));
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route
-        path="/grades/*"
+        path="/student-grades/*"
         element={
           <Suspense fallback={<Loading />}>
-            <GradeRemote />
+            <StudentGradesRemote />
           </Suspense>
         }
       />
       <Route
-        path="/logsheet/*"
+        path="/activity-log/*"
         element={
           <Suspense fallback={<Loading />}>
-            <LogSheetRemote />
+            <ActivityLogRemote />
           </Suspense>
         }
       />
@@ -123,9 +123,9 @@ root.render(
 ```tsx
 // ✅ All paths are RELATIVE (no leading '/')
 export const routes = [
-  { path: "/", component: GradeList },      // /grades/
-  { path: "add", component: GradeCreate }, // /grades/add
-  { path: ":id", component: GradeDetail },  // /grades/:id
+  { path: "/", component: StudentGradesList },      // /student-grades/
+  { path: "add", component: StudentGradesCreate }, // /student-grades/add
+  { path: ":id", component: StudentGradesDetail },  // /student-grades/:id
 ];
 ```
 
@@ -162,7 +162,7 @@ entry: {
 ## 🚀 Current Implementation
 
 The actual working implementation includes:
-- Root `package.json` with convenient scripts (`npm run dev:host`, etc.)
+- Root `package.json` with convenient scripts (`npm run dev:host`, `npm run dev:student-grades`, etc.)
 - Framer Motion animations
 - Enhanced error handling with user-friendly error messages
 - React Router future flags to suppress warnings

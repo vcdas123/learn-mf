@@ -43,7 +43,10 @@ export const CounterDemo: React.FC = () => {
         sx={{
           p: 4,
           mb: 6,
-          background: "linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%)",
+          background: (theme) => 
+            theme.palette.mode === "light" 
+              ? "linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%)"
+              : "linear-gradient(135deg, #1e293b 0%, #1e1b4b 100%)",
           borderRadius: 3,
           border: "1px solid",
           borderColor: "divider",
@@ -70,7 +73,7 @@ export const CounterDemo: React.FC = () => {
             variant="h3"
             sx={{
               fontWeight: 700,
-              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+              background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",

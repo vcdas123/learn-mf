@@ -347,7 +347,7 @@ host/
 ### Remote Applications
 
 ```
-remotes/grade/
+remotes/student-grades/
 ├── src/
 │   └── assets/              # ✅ Assets imported in code
 │       ├── images/          #   (Empty - add images here for import)

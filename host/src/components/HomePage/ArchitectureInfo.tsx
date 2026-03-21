@@ -22,7 +22,10 @@ export const ArchitectureInfo: React.FC = () => {
         elevation={0}
         sx={{
           p: 4,
-          background: "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)",
+          background: (theme) => 
+            theme.palette.mode === "light" 
+              ? "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)"
+              : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
           borderRadius: 3,
           border: "1px solid",
           borderColor: "divider",
@@ -48,7 +51,7 @@ export const ArchitectureInfo: React.FC = () => {
             <Chip
               label={app.currentModule || "Home"}
               sx={{
-                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                 color: "white",
                 fontWeight: 600,
               }}

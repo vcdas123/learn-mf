@@ -18,7 +18,7 @@ import {
 import { motion } from "framer-motion";
 import { useGradeStore, type Grade } from "../store/useGradeStore";
 
-function GradeEdit(): React.ReactElement {
+function StudentGradesEdit(): React.ReactElement {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const getGradeById = useGradeStore((state) => state.getGradeById);
@@ -38,7 +38,7 @@ function GradeEdit(): React.ReactElement {
 
   useEffect(() => {
     if (!id || !grade) {
-      setError("Grade not found");
+      setError("Record not found");
       return;
     }
     setFormData(grade);
@@ -56,8 +56,8 @@ function GradeEdit(): React.ReactElement {
     e.preventDefault();
     if (!id) return;
 
-    if (!formData.name || !formData.score) {
-      setError("Name and score are required");
+    if (!formData.name || formData.score === undefined) {
+      setError("Entry name and score are required");
       return;
     }
 
@@ -67,21 +67,21 @@ function GradeEdit(): React.ReactElement {
     }
 
     updateGrade(id, formData);
-    navigate(`/${id}`);
+    navigate(".."); // Navigate back to detail view
   };
 
   const handleDelete = () => {
     if (!id) return;
-    if (window.confirm("Are you sure you want to delete this grade?")) {
+    if (window.confirm("Are you sure you want to delete this record?")) {
       removeGrade(id);
-      navigate("/");
+      navigate("../.."); // Navigate back to list
     }
   };
 
   if (!grade && !error) {
     return (
       <Box>
-        <Typography variant="body1">Loading...</Typography>
+        <Typography variant="body1">Loading record...</Typography>
       </Box>
     );
   }
@@ -92,7 +92,7 @@ function GradeEdit(): React.ReactElement {
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
-        <Button variant="outlined" onClick={() => navigate("/")}>
+        <Button variant="outlined" onClick={() => navigate("../..")}>
           Back to List
         </Button>
       </Box>
@@ -106,7 +106,7 @@ function GradeEdit(): React.ReactElement {
         animate={{ opacity: 1, y: 0 }}
       >
         <Typography variant="h5" component="h2" sx={{ mb: 4, fontWeight: 700 }}>
-          Edit Grade
+          Edit Record
         </Typography>
 
         <Paper elevation={2} sx={{ p: 4 }}>
@@ -120,7 +120,7 @@ function GradeEdit(): React.ReactElement {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
-                  label="Grade Name"
+                  label="Entry Name"
                   fullWidth
                   required
                   value={formData.name || ""}
@@ -201,7 +201,7 @@ function GradeEdit(): React.ReactElement {
                     variant="contained"
                     startIcon={<SaveIcon />}
                     sx={{
-                      background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                      background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                     }}
                   >
                     Save Changes
@@ -210,7 +210,7 @@ function GradeEdit(): React.ReactElement {
                     type="button"
                     variant="outlined"
                     startIcon={<CancelIcon />}
-                    onClick={() => navigate(id ? `/${id}` : "/")}
+                    onClick={() => navigate("..")}
                   >
                     Cancel
                   </Button>
@@ -234,5 +234,4 @@ function GradeEdit(): React.ReactElement {
   );
 }
 
-export default GradeEdit;
-
+export default StudentGradesEdit;

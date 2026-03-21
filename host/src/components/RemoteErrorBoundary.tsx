@@ -80,7 +80,7 @@ export class RemoteErrorBoundary extends React.Component<
                 sx={{
                   p: 2,
                   mb: 3,
-                  bgcolor: "grey.100",
+                  bgcolor: (theme) => theme.palette.mode === "light" ? "grey.100" : "rgba(255,255,255,0.05)",
                   borderRadius: 1,
                   fontFamily: "monospace",
                   fontSize: "0.875rem",
@@ -99,7 +99,7 @@ export class RemoteErrorBoundary extends React.Component<
                       this.setState({ hasError: false, error: null });
                     }}
                     sx={{
-                      background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                      background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                       boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
                     }}
                   >

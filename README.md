@@ -107,47 +107,48 @@ npm run dev:image-analyzer
 
 ```bash
 cd host && npm run dev
-cd remotes/grade && npm run dev
-# etc...
+cd remotes/student-grades && npm run dev
+cd remotes/activity-log && npm run dev
+cd remotes/image-analyzer && npm run dev
 ```
 
 ### 4. Access Applications
 
 - **Host Application**: http://localhost:3000 (loads all remotes)
-- **Grade Module (Standalone)**: http://localhost:3105
-- **Log Sheet Module (Standalone)**: http://localhost:3106
-- **AI Vision Module (Standalone)**: http://localhost:3107
+- **Student Grades Module (Standalone)**: http://localhost:3105
+- **Activity Log Module (Standalone)**: http://localhost:3106
+- **Image Analyzer Module (Standalone)**: http://localhost:3107
 
 ## 📚 Available Scripts
 
 ### Development
 
 ```bash
-npm run dev:host        # Start host application
-npm run dev:grade       # Start grade remote
-npm run dev:logsheet    # Start dynamic log sheet remote
-npm run dev:ai-vision   # Start AI vision remote
+npm run dev:host              # Start host application
+npm run dev:student-grades    # Start student-grades remote
+npm run dev:activity-log      # Start activity-log remote
+npm run dev:image-analyzer    # Start image-analyzer remote
 ```
 
 ### Build
 
 ```bash
-npm run build:host      # Build host application
-npm run build:grade     # Build grade remote
-npm run build:logsheet  # Build dynamic log sheet remote
-npm run build:ai-vision # Build AI vision remote
-npm run build:all       # Build all remotes + host
-npm run build:remotes   # Build all remotes only
+npm run build:host            # Build host application
+npm run build:student-grades  # Build student-grades remote
+npm run build:activity-log    # Build activity-log remote
+npm run build:image-analyzer  # Build image-analyzer remote
+npm run build:all             # Build all remotes + host
+npm run build:remotes         # Build all remotes only
 ```
 
 ### Installation
 
 ```bash
-npm run install:all     # Install dependencies for all apps
-npm run install:host    # Install host dependencies only
-npm run install:grade   # Install grade remote dependencies only
-npm run install:logsheet # Install log sheet remote dependencies only
-npm run install:ai-vision # Install AI vision remote dependencies only
+npm run install:all           # Install dependencies for all apps
+npm run install:host          # Install host dependencies only
+npm run install:student-grades # Install student-grades remote dependencies only
+npm run install:activity-log   # Install activity-log remote dependencies only
+npm run install:image-analyzer # Install image-analyzer remote dependencies only
 ```
 
 ### Info
@@ -214,9 +215,9 @@ dispatch({
 
 **Example Redux Interactions:**
 
-- **Grade Module**: Increments counter and shows success notification
-- **Log Sheet Module**: Decrements counter and shows info notification
-- **AI Vision Module**: Increments counter and shows success notification
+- **Student Grades**: Increments counter and shows success notification
+- **Activity Log**: Decrements counter and shows info notification
+- **Image Analyzer**: Increments counter and shows success notification
 
 ## 📖 Documentation
 
@@ -286,9 +287,9 @@ All applications share these as singletons:
 npm run build:remotes
 
 # Or build individually
-npm run build:grade
-npm run build:logsheet
-npm run build:ai-vision
+npm run build:student-grades
+npm run build:activity-log
+npm run build:image-analyzer
 ```
 
 ### Build Host
@@ -369,7 +370,7 @@ npm run build:all
 
 1. Navigate to host home page (http://localhost:3000)
 2. Use the counter buttons to increment/decrement
-3. Navigate to any remote module (Grade, Log Sheet, AI Vision)
+3. Navigate to any remote module (Student Grades, Activity Log, Image Analyzer)
 4. See the same counter value displayed
 5. Click action buttons in remotes to modify counter
 6. Counter updates and shows notification

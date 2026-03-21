@@ -88,7 +88,7 @@ body {
 ```
 
 ```tsx
-// remotes/grade/src/pages/List.tsx
+// remotes/student-grades/src/pages/List.tsx
 function GradeList() {
   return (
     <button className="custom-button">
@@ -100,12 +100,12 @@ function GradeList() {
 
 ### Remote Global CSS
 
-**Location**: `remotes/grade/src/styles/globals.css` (example)
+**Location**: `remotes/student-grades/src/styles/globals.css` (example)
 
 **How it's imported**:
 
 ```tsx
-// remotes/grade/src/App.tsx
+// remotes/student-grades/src/App.tsx
 import "./styles/globals.css"; // ✅ Imported in remote App component
 
 function GradeApp() {
@@ -125,7 +125,7 @@ function GradeApp() {
 **Example**:
 
 ```css
-/* remotes/grade/src/styles/globals.css */
+/* remotes/student-grades/src/styles/globals.css */
 .grade-specific {
   color: red; /* ✅ Applies to everything once remote loads */
 }
@@ -136,11 +136,11 @@ body {
 ```
 
 ```tsx
-// host/src/components/Header.tsx
-function Header() {
+// host/src/components/Navigation.tsx (example)
+function Navigation() {
   return (
     <div className="grade-specific">
-      Header {/* ⚠️ Uses remote's CSS if remote has loaded */}
+      Navigation {/* ⚠️ Uses remote's CSS if remote has loaded */}
     </div>
   );
 }
@@ -158,7 +158,7 @@ body {
   background: white;
 }
 
-/* remotes/grade/src/styles/globals.css */
+/* remotes/student-grades/src/styles/globals.css */
 body {
   font-family: "Arial", sans-serif; /* ⚠️ Overrides host */
   font-size: 14px; /* ⚠️ Overrides host */
@@ -166,7 +166,7 @@ body {
 }
 ```
 
-**Result**: Last loaded CSS wins. If grade remote loads after host, grade's styles override host's.
+**Result**: Last loaded CSS wins. If student-grades remote loads after host, its styles override host's.
 
 **Solution**:
 
@@ -190,23 +190,27 @@ CSS Modules provide **true CSS isolation** by hashing class names, making them u
 {
   test: /\.css$/i,
   use: [
-    "css-loader",
-    options: {
-      modules: {
-        auto: /\.module\.css$/i,  // ✅ Auto-detect .module.css files
+    isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+    {
+      loader: "css-loader",
+      options: {
+        modules: {
+          auto: /\.module\.css$/i,  // ✅ Auto-detect .module.css files
+        },
       },
     },
+    "postcss-loader",
   ],
 }
 ```
 
 ### Host CSS Modules
 
-**File**: `host/src/components/Header.module.css`
+**File**: `host/src/components/Navigation.module.css`
 
 ```css
-/* host/src/components/Header.module.css */
-.header {
+/* host/src/components/Navigation.module.css */
+.nav {
   background: blue;
   padding: 20px;
 }
@@ -220,15 +224,15 @@ CSS Modules provide **true CSS isolation** by hashing class names, making them u
 **Usage**:
 
 ```tsx
-// host/src/components/Header.tsx
-import styles from "./Header.module.css"; // ✅ CSS Module
+// host/src/components/Navigation.tsx
+import styles from "./Navigation.module.css"; // ✅ CSS Module
 
-function Header() {
+function Navigation() {
   return (
-    <div className={styles.header}>
+    <div className={styles.nav}>
       {" "}
       {/* ✅ Scoped class */}
-      <h1 className={styles.title}>Host Header</h1>
+      <h1 className={styles.title}>Host Navigation</h1>
     </div>
   );
 }
@@ -238,9 +242,9 @@ function Header() {
 
 ```html
 <!-- Actual DOM output -->
-<div class="Header_header__abc123">
+<div class="Navigation_nav__abc123">
   <!-- Hashed class name -->
-  <h1 class="Header_title__def456">Host Header</h1>
+  <h1 class="Navigation_title__def456">Host Navigation</h1>
 </div>
 ```
 
@@ -248,10 +252,10 @@ function Header() {
 
 ### Remote CSS Modules
 
-**File**: `remotes/grade/src/pages/List.module.css`
+**File**: `remotes/student-grades/src/pages/List.module.css`
 
 ```css
-/* remotes/grade/src/pages/List.module.css */
+/* remotes/student-grades/src/pages/List.module.css */
 .list {
   background: green;
   padding: 10px;
@@ -265,7 +269,7 @@ function Header() {
 **Usage**:
 
 ```tsx
-// remotes/grade/src/pages/List.tsx
+// remotes/student-grades/src/pages/List.tsx
 import styles from "./List.module.css"; // ✅ CSS Module
 
 function GradeList() {
@@ -327,7 +331,7 @@ Affects: Host components + Remote components
 #### Scenario 1: Remote Runs Standalone (Direct URL Access)
 
 ```
-User visits: http://localhost:3105/ (Grade remote)
+User visits: http://localhost:3105/ (Student Grades remote)
     ↓
 Remote's index.html loads (has its own <head>)
     ↓
@@ -383,7 +387,7 @@ CSS applies globally (affects host + all remotes)
     <style>
       body { font-family: 'Roboto'; }
       .host-global { color: blue; }
-      .Header_header__abc123 { ... }  /* Host CSS Module */
+      .Navigation_nav__abc123 { ... }  /* Host CSS Module */
     </style>
 
     <!-- Remote CSS (injected when remote's JS bundle loads) -->
@@ -397,7 +401,7 @@ CSS applies globally (affects host + all remotes)
   <body>
     <div id="root">  <!-- Host's root -->
       <!-- Host components -->
-      <div class="host-global Header_header__abc123">Host</div>
+      <div class="host-global Navigation_nav__abc123">Host</div>
 
       <!-- Remote components (rendered here, no separate root) -->
       <div class="remote-global List_list__xyz789">Remote</div>
@@ -419,7 +423,7 @@ When remotes run, they can operate in two different contexts:
 
 ### Standalone Mode (Direct URL Access)
 
-**URL**: `http://localhost:3105/` (Grade remote directly)
+**URL**: `http://localhost:3105/` (Student Grades remote directly)
 
 **What Happens**:
 
@@ -439,7 +443,7 @@ When remotes run, they can operate in two different contexts:
 <!-- Remote's own index.html -->
 <html>
   <head>
-    <title>Grade Module - Standalone</title>
+    <title>Student Grades Module - Standalone</title>
     <!-- Remote's CSS injected/loaded here -->
     <style>
       /* Remote CSS */
@@ -455,16 +459,16 @@ When remotes run, they can operate in two different contexts:
 
 ### Host Mode (Loaded via Module Federation)
 
-**URL**: `http://localhost:3000/grades` (Host loads Grade remote)
+**URL**: `http://localhost:3000/student-grades` (Host loads Student Grades remote)
 
 **What Happens**:
 
 ```
-1. Browser requests: http://localhost:3000/grades
+1. Browser requests: http://localhost:3000/student-grades
 2. Host's index.html is served (has its own <head>)
 3. Host's JavaScript loads, initializes React app
-4. Host routes to /grades, lazy loads Grade remote:
-   const GradeRemote = lazy(() => import("grade/App"));
+4. Host routes to /student-grades, lazy loads remote:
+   const StudentGradesRemote = lazy(() => import("student-grades/App"));
 5. Module Federation fetches remote's JavaScript bundle
 6. Remote's JavaScript executes in HOST's context
 7. CSS injection happens:
@@ -498,10 +502,10 @@ When remotes run, they can operate in two different contexts:
     <div id="root">
       <!-- Host's root -->
       <!-- Host components -->
-      <HostNavigation />
+      <Navigation />
 
       <!-- Remote component rendered HERE (no separate root) -->
-      <GradeRemote />
+      <StudentGradesRemote />
     </div>
   </body>
 </html>
@@ -566,7 +570,7 @@ new MiniCssExtractPlugin({
 
 1. CSS is extracted to separate files during build:
 
-   - `remotes/grade/dist/css/main.abc12345.css`
+   - `remotes/student-grades/dist/css/main.abc12345.css`
 
 2. When remote's JavaScript bundle loads, webpack automatically:
 
@@ -596,7 +600,7 @@ http://localhost:3105/
 **Host Mode**:
 
 ```
-http://localhost:3000/grades
+http://localhost:3000/student-grades
 ├── index.html (host's only HTML)
 │   └── <head>
 │       ├── <style>/* Host CSS */</style>
@@ -725,7 +729,7 @@ function MyComponent() {
 **❌ DON'T**:
 
 ```css
-/* remotes/grade/src/styles/globals.css */
+/* remotes/student-grades/src/styles/globals.css */
 body {
   /* ⚠️ Overrides host's body styles */
   font-size: 14px;
@@ -741,7 +745,7 @@ body {
 
 ```css
 /* Use CSS Modules or specific selectors */
-.grade-app {
+.student-grades-app {
   /* More specific, less likely to conflict */
   font-size: 14px;
 }
@@ -784,12 +788,12 @@ body {
 
 ### Pattern 2: Module-Specific Styles
 
-**Remote** (`remotes/grade/src/App.tsx`):
+**Remote** (`remotes/student-grades/src/App.tsx`):
 
 ```tsx
 import styles from "./App.module.css"; // ✅ CSS Module
 
-function GradeApp() {
+function StudentGradesApp() {
   return (
     <div className={styles.gradeApp}>
       {" "}
@@ -800,7 +804,7 @@ function GradeApp() {
 }
 ```
 
-**CSS Module** (`remotes/grade/src/App.module.css`):
+**CSS Module** (`remotes/student-grades/src/App.module.css`):
 
 ```css
 .gradeApp {
@@ -841,7 +845,7 @@ function GradeApp() {
 **Remotes** (use variables):
 
 ```css
-/* remotes/grade/src/components/Card.module.css */
+/* remotes/student-grades/src/components/Card.module.css */
 .card {
   background: var(--theme-primary);
   padding: calc(var(--theme-spacing) * 2);
@@ -889,7 +893,7 @@ Do you need component-specific styles?
 ```
 
 ```tsx
-// remotes/grade/src/pages/List.tsx
+// remotes/student-grades/src/pages/List.tsx
 function GradeList() {
   return (
     <button className="button">
@@ -912,14 +916,14 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-/* remotes/grade/src/styles/globals.css */
+/* remotes/student-grades/src/styles/globals.css */
 body {
   font-size: 14px; /* ⚠️ Overrides host */
   font-family: "Arial", sans-serif; /* ⚠️ Overrides host */
 }
 ```
 
-**Result**: If grade remote loads, its styles override host's ⚠️
+**Result**: If student-grades remote loads, its styles override host's ⚠️
 
 ### Example 3: CSS Modules (No Conflicts)
 
@@ -929,7 +933,7 @@ body {
   background: blue;
 }
 
-/* remotes/grade/src/components/Button.module.css */
+/* remotes/student-grades/src/components/Button.module.css */
 .button {
   background: green; /* ✅ No conflict - different hashed class names */
 }
@@ -941,7 +945,7 @@ import styles from "./Button.module.css";
 <button className={styles.button}>Host Button</button>;
 // → <button class="Button_button__abc123">Host Button</button>
 
-// remotes/grade/src/components/Button.tsx
+// remotes/student-grades/src/components/Button.tsx
 import styles from "./Button.module.css";
 <button className={styles.button}>Grade Button</button>;
 // → <button class="Button_button__xyz789">Grade Button</button>
@@ -952,11 +956,11 @@ import styles from "./Button.module.css";
 ### Example 4: Tailwind Utilities (Shared)
 
 ```tsx
-// host/src/components/Header.tsx
-<div className="bg-blue-500 p-4 text-white">Host Header</div>
+// host/src/components/Navigation.tsx
+<div className="bg-blue-500 p-4 text-white">Host Navigation</div>
 
-// remotes/grade/src/pages/List.tsx
-<div className="bg-blue-500 p-4 text-white">Grade List</div>
+// remotes/student-grades/src/pages/List.tsx
+<div className="bg-blue-500 p-4 text-white">Student Grades</div>
 ```
 
 **Result**: Both use same Tailwind utilities, consistent styling ✅

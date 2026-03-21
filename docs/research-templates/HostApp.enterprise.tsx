@@ -17,9 +17,9 @@ import store from "./store"; // Adjust path to your Redux store
 
 // Lazy load remote applications as React components
 // Module Federation exposes them as default exports
-const GradeRemote = lazy(() => import("grade/App"));
-const DynamicLogSheetRemote = lazy(() => import("dynamiclogsheet/App"));
-const AiVisionRemote = lazy(() => import("ai-vision/App"));
+const StudentGradesRemote = lazy(() => import("student-grades/App"));
+const ActivityLogRemote = lazy(() => import("activity-log/App"));
+const ImageAnalyzerRemote = lazy(() => import("image-analyzer/App"));
 
 // Error boundary for remote loading failures
 interface RemoteErrorBoundaryProps {
@@ -101,35 +101,35 @@ function HostApp(): React.ReactElement {
 
           {/* Remote module routes - host owns the base path */}
           <Route
-            path="/grades/*"
+            path="/student-grades/*"
             element={
-              <RemoteErrorBoundary moduleName="grade">
-                <Suspense fallback={<RemoteLoading moduleName="grade" />}>
-                  <GradeRemote />
+              <RemoteErrorBoundary moduleName="student-grades">
+                <Suspense fallback={<RemoteLoading moduleName="student-grades" />}>
+                  <StudentGradesRemote />
                 </Suspense>
               </RemoteErrorBoundary>
             }
           />
 
           <Route
-            path="/logsheet/*"
+            path="/activity-log/*"
             element={
-              <RemoteErrorBoundary moduleName="dynamiclogsheet">
+              <RemoteErrorBoundary moduleName="activity-log">
                 <Suspense
-                  fallback={<RemoteLoading moduleName="dynamiclogsheet" />}
+                  fallback={<RemoteLoading moduleName="activity-log" />}
                 >
-                  <DynamicLogSheetRemote />
+                  <ActivityLogRemote />
                 </Suspense>
               </RemoteErrorBoundary>
             }
           />
 
           <Route
-            path="/ai-vision/*"
+            path="/image-analyzer/*"
             element={
-              <RemoteErrorBoundary moduleName="ai-vision">
-                <Suspense fallback={<RemoteLoading moduleName="ai-vision" />}>
-                  <AiVisionRemote />
+              <RemoteErrorBoundary moduleName="image-analyzer">
+                <Suspense fallback={<RemoteLoading moduleName="image-analyzer" />}>
+                  <ImageAnalyzerRemote />
                 </Suspense>
               </RemoteErrorBoundary>
             }

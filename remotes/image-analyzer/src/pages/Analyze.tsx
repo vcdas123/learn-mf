@@ -13,10 +13,13 @@ import {
 } from "@mui/material";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import { useSelector } from "../hooks/useReduxStore";
+import { useImageStore } from "../store/useImageStore";
 
-function AiVisionAnalyze(): React.ReactElement {
+function ImageAnalyzerAnalyze(): React.ReactElement {
   const navigate = useNavigate();
   const [progress, setProgress] = React.useState(0);
+  const [isSaved, setIsSaved] = React.useState(false);
+  const addAnalysis = useImageStore((state) => state.addAnalysis);
   
   // Access Redux store (from host in production, standalone in dev)
   const counter = useSelector((state: any) => state.counter);
@@ -25,17 +28,34 @@ function AiVisionAnalyze(): React.ReactElement {
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
+          clearInterval(timer);
           return 100;
         }
-        const diff = Math.random() * 10;
+        const diff = Math.random() * 15;
         return Math.min(oldProgress + diff, 100);
       });
-    }, 500);
+    }, 400);
 
     return () => {
       clearInterval(timer);
     };
   }, []);
+
+  React.useEffect(() => {
+    if (progress === 100 && !isSaved) {
+      // Automatically save to local history when complete
+      const results: Array<"success" | "warning"> = ["success", "warning"];
+      const randomResult = results[Math.floor(Math.random() * results.length)];
+      
+      addAnalysis({
+        imageName: `analysis_${Date.now().toString().slice(-4)}.png`,
+        result: randomResult,
+        score: Math.round(70 + Math.random() * 30),
+        tags: ["AI-Generated", "Neural-Scan", "Analyzed"],
+      });
+      setIsSaved(true);
+    }
+  }, [progress, isSaved, addAnalysis]);
 
   return (
     <Box>
@@ -49,14 +69,14 @@ function AiVisionAnalyze(): React.ReactElement {
           component="h2"
           sx={{ mb: 4, fontWeight: 600 }}
         >
-          AI Vision Analysis
+          Image Analyzer Analysis
         </Typography>
         <Paper
           elevation={0}
           sx={{
             p: { xs: 4, md: 6 },
             maxWidth: "800px",
-            background: "linear-gradient(135deg, #fafafa 0%, #ffffff 100%)",
+            background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #fafafa 0%, #ffffff 100%)" : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
             borderRadius: 3,
             border: "1px solid",
             borderColor: "divider",
@@ -64,7 +84,7 @@ function AiVisionAnalyze(): React.ReactElement {
         >
           <Box sx={{ mb: 4 }}>
             <Typography variant="body1" sx={{ mb: 3, color: "text.secondary" }}>
-              AI Vision analysis in progress...
+              {progress < 100 ? "Image Analyzer analysis in progress..." : "Analysis complete! Results saved to history."}
             </Typography>
             <LinearProgress
               variant="determinate"
@@ -73,7 +93,7 @@ function AiVisionAnalyze(): React.ReactElement {
                 height: 10,
                 borderRadius: 2,
                 mb: 2,
-                background: "#e5e7eb",
+                background: (theme) => theme.palette.mode === "light" ? "#e5e7eb" : "rgba(255,255,255,0.1)",
                 "& .MuiLinearProgress-bar": {
                   background: "linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)",
                   borderRadius: 2,
@@ -88,7 +108,7 @@ function AiVisionAnalyze(): React.ReactElement {
               }}
             >
               <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                Processing image data...
+                {progress < 100 ? "Processing neural networks..." : "Saved to local storage"}
               </Typography>
               <Chip
                 label={`${Math.round(progress)}%`}
@@ -114,9 +134,9 @@ function AiVisionAnalyze(): React.ReactElement {
                 elevation={0}
                 sx={{
                   mb: 4,
-                  background: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
+                  background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)" : "linear-gradient(135deg, #064e3b 0%, #065f46 100%)",
                   border: "1px solid",
-                  borderColor: "#10b981",
+                  borderColor: "success.main",
                   borderRadius: 3,
                 }}
               >
@@ -126,43 +146,18 @@ function AiVisionAnalyze(): React.ReactElement {
                     sx={{
                       fontWeight: 600,
                       mb: 2,
-                      color: "#065f46",
+                      color: (theme) => theme.palette.mode === "light" ? "#065f46" : "#ecfdf5",
                     }}
                   >
-                    ✅ Analysis Complete!
+                    ✅ Scan Finished
                   </Typography>
-                  <Typography variant="body2" sx={{ mb: 4, color: "#047857" }}>
-                    The AI has successfully processed the image and identified key
-                    patterns and insights. The analysis includes:
+                  <Typography variant="body2" sx={{ mb: 4, color: (theme) => theme.palette.mode === "light" ? "#047857" : "#a7f3d0" }}>
+                    The Image Analyzer has processed your request and synchronized the results with your local module store.
                   </Typography>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5, mb: 3 }}>
-                    <Chip
-                      label="Pattern Recognition"
-                      size="small"
-                      sx={{
-                        background: "#10b981",
-                        color: "white",
-                        fontWeight: 600,
-                      }}
-                    />
-                    <Chip
-                      label="Object Detection"
-                      size="small"
-                      sx={{
-                        background: "#10b981",
-                        color: "white",
-                        fontWeight: 600,
-                      }}
-                    />
-                    <Chip
-                      label="Feature Extraction"
-                      size="small"
-                      sx={{
-                        background: "#10b981",
-                        color: "white",
-                        fontWeight: 600,
-                      }}
-                    />
+                    <Chip label="Neural-Scan" size="small" />
+                    <Chip label="Pattern-Match" size="small" />
+                    <Chip label="Stored" size="small" />
                   </Box>
                   
                   {/* Show Redux counter value */}
@@ -171,7 +166,7 @@ function AiVisionAnalyze(): React.ReactElement {
                     sx={{
                       mt: 3,
                       p: 3,
-                      background: "white",
+                      background: (theme) => theme.palette.mode === "light" ? "white" : "rgba(0,0,0,0.2)",
                       borderRadius: 2,
                       border: "1px solid",
                       borderColor: "divider",
@@ -186,19 +181,19 @@ function AiVisionAnalyze(): React.ReactElement {
                         fontWeight: 600,
                       }}
                     >
-                      Current Counter Value (from shared Redux store):
+                      Global Shared State (Redux):
                     </Typography>
                     <Typography
                       variant="h5"
                       sx={{
                         fontWeight: 700,
-                        background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                        background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                         backgroundClip: "text",
                       }}
                     >
-                      {counter.value}
+                      Value: {counter.value}
                     </Typography>
                   </Paper>
                 </CardContent>
@@ -209,16 +204,16 @@ function AiVisionAnalyze(): React.ReactElement {
             <Button
               variant="contained"
               startIcon={<ArrowBackIcon />}
-              onClick={() => navigate("/")}
+              onClick={() => navigate("..")}
               sx={{
-                background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                 boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
                 px: 4,
                 py: 1.5,
                 borderRadius: 2,
               }}
             >
-              Back to Dashboard
+              Return to Dashboard
             </Button>
           </motion.div>
         </Paper>
@@ -227,4 +222,4 @@ function AiVisionAnalyze(): React.ReactElement {
   );
 }
 
-export default AiVisionAnalyze;
+export default ImageAnalyzerAnalyze;

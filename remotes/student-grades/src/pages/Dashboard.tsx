@@ -19,7 +19,7 @@ import {
 import { motion } from "framer-motion";
 import { useGradeStore } from "../store/useGradeStore";
 
-function GradeDashboard(): React.ReactElement {
+function StudentGradesDashboard(): React.ReactElement {
   const navigate = useNavigate();
   const totalGrades = useGradeStore((state) => state.totalGrades());
   const averageScore = useGradeStore((state) => state.averageScore());
@@ -29,12 +29,12 @@ function GradeDashboard(): React.ReactElement {
 
   const stats = [
     {
-      title: "Total Grades",
+      title: "Total Records",
       value: totalGrades,
       icon: <AssessmentIcon sx={{ fontSize: 40 }} />,
       color: "#6366f1",
       gradient: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-      action: () => navigate("/"),
+      action: () => navigate(".."),
     },
     {
       title: "Average Score",
@@ -42,31 +42,25 @@ function GradeDashboard(): React.ReactElement {
       icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
       color: "#10b981",
       gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-      action: () => navigate("/statistics"),
+      action: () => navigate("../statistics"),
     },
     {
-      title: "High Grades (≥90)",
+      title: "High Performance",
       value: highGrades.length,
       icon: <SchoolIcon sx={{ fontSize: 40 }} />,
       color: "#3b82f6",
       gradient: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-      action: () => navigate("/?filter=high"),
+      action: () => navigate("..?filter=high"),
     },
     {
-      title: "Low Grades (<70%)",
+      title: "Needs Attention",
       value: lowGrades.length,
       icon: <BarChartIcon sx={{ fontSize: 40 }} />,
-      color: "#ef4444",
+      color: "#3b82f6",
       gradient: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-      action: () => navigate("/?filter=low"),
+      action: () => navigate("..?filter=low"),
     },
   ];
-
-  const getProgressColor = (score: number) => {
-    if (score >= 90) return "success";
-    if (score >= 70) return "warning";
-    return "error";
-  };
 
   return (
     <Box>
@@ -75,20 +69,25 @@ function GradeDashboard(): React.ReactElement {
         component="h2"
         sx={{ mb: 4, fontWeight: 700 }}
       >
-        📊 Grade Dashboard
+        📊 Student Grades Dashboard
       </Typography>
 
       {/* Statistics Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={3} sx={{ mb: 4 }} alignItems="stretch">
         {stats.map((stat, index) => (
-          <Grid item xs={12} sm={6} md={3} key={stat.title}>
+          <Grid item xs={12} sm={6} md={3} key={stat.title} sx={{ display: "flex" }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
+              style={{ height: "100%", display: "flex", width: "100%" }}
             >
               <Card
                 sx={{
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
                   background: stat.gradient,
                   color: "white",
                   cursor: "pointer",
@@ -99,7 +98,7 @@ function GradeDashboard(): React.ReactElement {
                 }}
                 onClick={stat.action}
               >
-                <CardContent>
+                <CardContent sx={{ flexGrow: 1 }}>
                   <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                     {stat.icon}
                     <Typography
@@ -123,15 +122,15 @@ function GradeDashboard(): React.ReactElement {
       </Grid>
 
       {/* Grade Distribution */}
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3 }}>
+      <Grid container spacing={3} alignItems="stretch">
+        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+          <Paper elevation={2} sx={{ p: 3, flexGrow: 1, display: "flex", flexDirection: "column" }}>
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-              Grade Distribution
+              Performance Distribution
             </Typography>
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                <Typography variant="body2">High (≥90)</Typography>
+                <Typography variant="body2">Excellent (≥90)</Typography>
                 <Typography variant="body2" fontWeight={600}>
                   {highGrades.length} ({totalGrades > 0 ? Math.round((highGrades.length / totalGrades) * 100) : 0}%)
                 </Typography>
@@ -145,7 +144,7 @@ function GradeDashboard(): React.ReactElement {
             </Box>
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                <Typography variant="body2">Medium (70-89)</Typography>
+                <Typography variant="body2">Average (70-89)</Typography>
                 <Typography variant="body2" fontWeight={600}>
                   {mediumGrades.length} ({totalGrades > 0 ? Math.round((mediumGrades.length / totalGrades) * 100) : 0}%)
                 </Typography>
@@ -157,9 +156,9 @@ function GradeDashboard(): React.ReactElement {
                 sx={{ height: 8, borderRadius: 4 }}
               />
             </Box>
-            <Box>
+            <Box sx={{ mb: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                <Typography variant="body2">Low (&lt;70)</Typography>
+                <Typography variant="body2">Below Average (&lt;70)</Typography>
                 <Typography variant="body2" fontWeight={600}>
                   {lowGrades.length} ({totalGrades > 0 ? Math.round((lowGrades.length / totalGrades) * 100) : 0}%)
                 </Typography>
@@ -174,35 +173,35 @@ function GradeDashboard(): React.ReactElement {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3 }}>
+        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+          <Paper elevation={2} sx={{ p: 3, flexGrow: 1, display: "flex", flexDirection: "column" }}>
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
               Quick Actions
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flexGrow: 1 }}>
               <Button
                 variant="contained"
                 fullWidth
-                onClick={() => navigate("/add")}
+                onClick={() => navigate("../add")}
                 sx={{
-                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                  background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
                 }}
               >
-                Add New Grade
+                Add New Record
               </Button>
               <Button
                 variant="outlined"
                 fullWidth
-                onClick={() => navigate("/")}
+                onClick={() => navigate("..")}
               >
-                View All Grades
+                View All Records
               </Button>
               <Button
                 variant="outlined"
                 fullWidth
-                onClick={() => navigate("/statistics")}
+                onClick={() => navigate("../statistics")}
               >
-                View Statistics
+                View Detailed Analytics
               </Button>
             </Box>
           </Paper>
@@ -212,5 +211,5 @@ function GradeDashboard(): React.ReactElement {
   );
 }
 
-export default GradeDashboard;
+export default StudentGradesDashboard;
 

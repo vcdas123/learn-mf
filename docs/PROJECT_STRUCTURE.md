@@ -187,12 +187,12 @@ Each app has its own `tsconfig.json`:
 
 ```env
 HOST_PORT=3000
-REMOTE_GRADE_PORT=3105
-REMOTE_LOGSHEET_PORT=3106
-REMOTE_AI_VISION_PORT=3107
-REMOTE_GRADE_URL=http://localhost:3105
-REMOTE_LOGSHEET_URL=http://localhost:3106
-REMOTE_AI_VISION_URL=http://localhost:3107
+REMOTE_STUDENT_GRADES_PORT=3105
+REMOTE_ACTIVITY_LOG_PORT=3106
+REMOTE_IMAGE_ANALYZER_PORT=3107
+REMOTE_STUDENT_GRADES_URL=http://localhost:3105
+REMOTE_ACTIVITY_LOG_URL=http://localhost:3106
+REMOTE_IMAGE_ANALYZER_URL=http://localhost:3107
 ```
 
 ## 📦 Package Dependencies
@@ -313,14 +313,19 @@ All shared as singletons with `eager: true`:
 - `@emotion/react`, `@emotion/styled`
 
 ### Remote Names
-- Standard names: `grade`, `dynamiclogsheet` (no special handling)
-- Hyphenated names: `ai-vision` (uses `library.type: "var"` with `ai_vision` identifier)
+All remotes now use hyphenated names for their folders and identifiers in host config:
+- `student-grades`
+- `activity-log`
+- `image-analyzer`
+
+Hyphenated names use `library.type: "var"` with an underscore-based identifier (e.g., `image_analyzer`) in their respective `webpack.config.js`.
 
 ### Host Remote Configuration
 ```javascript
 remotes: {
-  grade: "grade@http://localhost:3105/remoteEntry.js",
-  "ai-vision": "ai_vision@http://localhost:3107/remoteEntry.js",
+  "student-grades": "student_grades@http://localhost:3105/remoteEntry.js",
+  "activity-log": "activity_log@http://localhost:3106/remoteEntry.js",
+  "image-analyzer": "image_analyzer@http://localhost:3107/remoteEntry.js",
 }
 ```
 
@@ -331,22 +336,24 @@ remotes: {
 **Development:**
 ```bash
 # Start each app individually
-cd host && npm run dev
-cd remotes/ai-vision && npm run dev
+npm run dev:host
+npm run dev:student-grades
+npm run dev:activity-log
+npm run dev:image-analyzer
 ```
 
 **Production Build:**
 ```bash
 # Build remotes first
-cd remotes/ai-vision && npm run build
+npm run build:remotes
 
 # Then build host
-cd host && npm run build
+npm run build:host
 ```
 
 ### Accessing Applications
 - Host: http://localhost:3000
-- Remotes (standalone): http://localhost:3105-3107
+- Remotes (standalone): http://localhost:3105, 3106, 3107
 
 ## 📚 Key Concepts
 

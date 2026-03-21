@@ -46,6 +46,8 @@ interface GradeState {
 
 const generateId = () => Date.now().toString() + Math.random().toString(36).substr(2, 9);
 
+const LOCAL_STORAGE_KEY = "mf-demo-grades";
+
 const initialGrades: Grade[] = [
   { 
     id: "1", 
@@ -93,38 +95,59 @@ const initialGrades: Grade[] = [
   },
 ];
 
+const loadGrades = (): Grade[] => {
+  const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      console.error("Failed to parse grades from localStorage", e);
+    }
+  }
+  return initialGrades;
+};
+
+const saveGrades = (grades: Grade[]) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(grades));
+};
+
 export const useGradeStore = create<GradeState>((set, get) => ({
       // Initial state
-      grades: initialGrades,
+      grades: loadGrades(),
       selectedGradeId: null,
       searchQuery: "",
       filterBy: "all",
 
       // Grade CRUD operations
-      addGrade: (gradeData) =>
-        set((state) => ({
-          grades: [
-            ...state.grades,
-            {
-              ...gradeData,
-              id: generateId(),
-              date: gradeData.date || new Date().toISOString().split("T")[0],
-            },
-          ],
-        })),
+      addGrade: (gradeData) => {
+        const newGrades = [
+          ...get().grades,
+          {
+            ...gradeData,
+            id: generateId(),
+            date: gradeData.date || new Date().toISOString().split("T")[0],
+          },
+        ];
+        saveGrades(newGrades);
+        set({ grades: newGrades });
+      },
 
-      updateGrade: (id, gradeData) =>
-        set((state) => ({
-          grades: state.grades.map((g) =>
-            g.id === id ? { ...g, ...gradeData } : g
-          ),
-        })),
+      updateGrade: (id, gradeData) => {
+        const newGrades = get().grades.map((g) =>
+          g.id === id ? { ...g, ...gradeData } : g
+        );
+        saveGrades(newGrades);
+        set({ grades: newGrades });
+      },
 
-      removeGrade: (id) =>
+      removeGrade: (id) => {
+        const newGrades = get().grades.filter((g) => g.id !== id);
+        saveGrades(newGrades);
         set((state) => ({
-          grades: state.grades.filter((g) => g.id !== id),
+          grades: newGrades,
           selectedGradeId: state.selectedGradeId === id ? null : state.selectedGradeId,
-        })),
+        }));
+      },
 
       getGradeById: (id) => {
         return get().grades.find((g) => g.id === id);

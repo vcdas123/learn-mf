@@ -1,10 +1,14 @@
 import React from "react";
-import LogSheetList from "./pages/List";
-import LogSheetDetail from "./pages/Detail";
+import ActivityLogList from "./pages/List";
+import ActivityLogDetail from "./pages/Detail";
+import ActivityLogCreate from "./pages/Create";
+import ActivityLogEdit from "./pages/Edit";
 
 export const routes = [
-  { path: "/", component: LogSheetList },
-  { path: ":id", component: LogSheetDetail },
+  { path: "/", component: ActivityLogList },
+  { path: "add", component: ActivityLogCreate },
+  { path: ":id/edit", component: ActivityLogEdit },
+  { path: ":id", component: ActivityLogDetail },
 ];
 
 export const defaultRoute = "/";
