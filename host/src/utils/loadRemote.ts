@@ -42,6 +42,7 @@ function resolveRemoteUrl(remoteName: string): string {
 }
 
 async function loadRemoteEntry(remoteName: string): Promise<void> {
+  console.log(`Loading remote entry for: ${remoteName}`);
   if (remoteEntryCache[remoteName] !== undefined) {
     return remoteEntryCache[remoteName];
   }
