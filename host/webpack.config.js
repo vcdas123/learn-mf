@@ -115,7 +115,7 @@ module.exports = (env, argv) => {
         ? "[name].[contenthash:8].chunk.js"
         : "[name].chunk.js",
       clean: true,
-      publicPath: "/",
+      publicPath: "auto",
     },
     // Suppress warnings for Module Federation dynamic imports
     // These are expected warnings when using dynamic imports with Module Federation
