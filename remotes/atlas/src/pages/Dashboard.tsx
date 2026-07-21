@@ -95,20 +95,21 @@ export const Dashboard: React.FC = () => {
                 textDecoration: "none",
                 color: "inherit",
                 borderRadius: "12px",
-                border: "1px solid #a9583e",
-                bgcolor: "#cc785c",
+                border: "1px solid",
+                borderColor: "divider",
+                bgcolor: "background.paper",
                 transition: "all 0.3s ease",
-                "&:hover": { opacity: 0.9, boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.4)" : "0 1px 3px rgba(20,20,19,0.08)" },
+                "&:hover": { borderColor: "primary.main", boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.4)" : "0 1px 3px rgba(20,20,19,0.08)" },
               }}
             >
               <CardContent sx={{ p: 4 }}>
-                <Box sx={{ color: "#ffffff", mb: 2, opacity: 0.9 }}>
+                <Box sx={{ color: "primary.main", mb: 2 }}>
                   <GlobeIcon sx={{ fontSize: 40 }} />
                 </Box>
-                <Typography sx={{ fontFamily: '"Cormorant Garamond", serif', fontWeight: 500, fontSize: "1.5rem", color: "#ffffff", mb: 1 }}>
+                <Typography sx={{ fontFamily: '"Cormorant Garamond", serif', fontWeight: 500, fontSize: "1.5rem", color: "text.primary", mb: 1 }}>
                   Earthquake Tracker
                 </Typography>
-                <Typography sx={{ color: "#ffffff", fontSize: "0.9375rem", lineHeight: 1.6, opacity: 0.85 }}>
+                <Typography sx={{ color: "text.secondary", fontSize: "0.9375rem", lineHeight: 1.6 }}>
                   Real-time seismic data from USGS. View magnitude, location, and depth of recent earthquakes worldwide.
                 </Typography>
               </CardContent>

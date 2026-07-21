@@ -1,0 +1,81 @@
+// Dynamic remote loading - fetches remoteEntry.js only when the route is accessed
+
+declare const __webpack_share_scopes__: Record<string, any>;
+declare namespace NodeJS {
+  interface ProcessEnv {
+    REMOTE_COSMOS_URL: string;
+    REMOTE_ATLAS_URL: string;
+  }
+}
+declare const process: { env: NodeJS.ProcessEnv };
+
+const remoteContainerCache: Record<string, any> = {};
+const remoteEntryCache: Record<string, Promise<void>> = {};
+
+const REMOTE_URLS: Record<string, string> = {
+  cosmos: process.env.REMOTE_COSMOS_URL,
+  atlas: process.env.REMOTE_ATLAS_URL,
+};
+
+async function loadRemoteEntry(remoteName: string): Promise<void> {
+  if (remoteEntryCache[remoteName] !== undefined) {
+    return remoteEntryCache[remoteName];
+  }
+
+  const url = REMOTE_URLS[remoteName];
+  if (!url) {
+    throw new Error(`Unknown remote: ${remoteName}`);
+  }
+
+  const entryUrl = `${url}/remoteEntry.js`;
+
+  const promise = new Promise<void>((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = entryUrl;
+    script.type = "text/javascript";
+    script.async = true;
+
+    script.onload = () => {
+      resolve();
+    };
+
+    script.onerror = () => {
+      delete remoteEntryCache[remoteName];
+      reject(new Error(`Failed to load remote entry: ${entryUrl}`));
+    };
+
+    document.head.appendChild(script);
+  });
+
+  remoteEntryCache[remoteName] = promise;
+  return promise;
+}
+
+async function getRemoteContainer(remoteName: string) {
+  if (remoteContainerCache[remoteName]) {
+    return remoteContainerCache[remoteName];
+  }
+
+  await loadRemoteEntry(remoteName);
+
+  const container = (window as any)[remoteName];
+  if (!container) {
+    throw new Error(
+      `Remote container "${remoteName}" not found on window after loading entry. ` +
+      `Make sure the remote's Module Federation config exposes the correct name.`
+    );
+  }
+
+  await container.init(__webpack_share_scopes__.default);
+  remoteContainerCache[remoteName] = container;
+  return container;
+}
+
+export async function loadRemoteModule<T = any>(
+  remoteName: string,
+  moduleName: string
+): Promise<T> {
+  const container = await getRemoteContainer(remoteName);
+  const factory = await container.get(moduleName);
+  return factory();
+}

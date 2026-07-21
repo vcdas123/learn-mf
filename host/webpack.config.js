@@ -86,7 +86,18 @@ module.exports = (env, argv) => {
     // 'source-map' generates full source maps (large files)
     // 'hidden-source-map' generates source maps but doesn't reference them (smaller)
     devtool: isProduction ? "hidden-source-map" : "eval-source-map",
-    plugins: [...hostPlugins, new ModuleFederationPlugin(getHostConfig())],
+    plugins: [
+      ...hostPlugins,
+      new ModuleFederationPlugin(getHostConfig()),
+      new webpack.DefinePlugin({
+        "process.env.REMOTE_COSMOS_URL": JSON.stringify(
+          process.env.REMOTE_COSMOS_URL
+        ),
+        "process.env.REMOTE_ATLAS_URL": JSON.stringify(
+          process.env.REMOTE_ATLAS_URL
+        ),
+      }),
+    ],
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: isProduction ? "[name].[contenthash:8].js" : "[name].bundle.js",

@@ -81,20 +81,9 @@ const sharedDependencies = {
 };
 
 exports.getHostConfig = () => {
-  const stripTrailingSlash = url => url.replace(/\/$/, "");
-  const REMOTE_COSMOS_URL = stripTrailingSlash(
-    process.env.REMOTE_COSMOS_URL || "http://localhost:3105",
-  );
-  const REMOTE_ATLAS_URL = stripTrailingSlash(
-    process.env.REMOTE_ATLAS_URL || "http://localhost:3106",
-  );
-
   return {
     name: "host",
-    remotes: {
-      cosmos: `cosmos@${REMOTE_COSMOS_URL}/remoteEntry.js`,
-      atlas: `atlas@${REMOTE_ATLAS_URL}/remoteEntry.js`,
-    },
+    remotes: {},
     shared: sharedDependencies,
   };
 };

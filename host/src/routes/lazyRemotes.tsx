@@ -1,10 +1,11 @@
 import { lazy } from "react";
+import { loadRemoteModule } from "../utils/loadRemote";
 
 const remoteCache: Record<string, Promise<any> | undefined> = {};
 
 function retryRemoteLoad<T>(
   remoteName: string,
-  loadRemote: () => Promise<T>,
+  loadFn: () => Promise<T>,
   maxRetries: number = 5,
   retryDelay: number = 1000
 ): Promise<T> {
@@ -17,7 +18,7 @@ function retryRemoteLoad<T>(
 
     const attemptLoad = () => {
       attempts++;
-      loadRemote()
+      loadFn()
         .then((module) => {
           resolve(module);
         })
@@ -52,15 +53,13 @@ function retryRemoteLoad<T>(
 }
 
 export const CosmosRemote = lazy(() =>
-  retryRemoteLoad("cosmos", () => {
-    // @ts-expect-error - Module Federation remote module
-    return import("cosmos/App");
-  })
+  retryRemoteLoad("cosmos", () =>
+    loadRemoteModule("cosmos", "./App")
+  )
 );
 
 export const AtlasRemote = lazy(() =>
-  retryRemoteLoad("atlas", () => {
-    // @ts-expect-error - Module Federation remote module
-    return import("atlas/App");
-  })
+  retryRemoteLoad("atlas", () =>
+    loadRemoteModule("atlas", "./App")
+  )
 );
