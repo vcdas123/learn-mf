@@ -1,3 +1,10 @@
+if (!Array.prototype.toSorted) {
+  Array.prototype.toSorted = function(compareFn) {
+    const compare = compareFn || ((a, b) => String(a).localeCompare(String(b)));
+    return [...this].sort(compare);
+  };
+}
+
 const { merge } = require("webpack-merge");
 const commonConfig = require("../sharedConfigs/webpack.common");
 const { getHostConfig } = require("../sharedConfigs/webpack.module-federation");

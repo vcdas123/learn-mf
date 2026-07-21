@@ -19,17 +19,41 @@ const REMOTE_URLS: Record<string, string> = {
   vault: process.env.REMOTE_VAULT_URL,
 };
 
+function resolveRemoteUrl(remoteName: string): string {
+  const envUrl = REMOTE_URLS[remoteName];
+  
+  // Fallback mapping for production if env vars are missing or relative
+  const fallbackUrls: Record<string, string> = {
+    cosmos: "https://cosmos-xi-one.vercel.app",
+    atlas: "https://atlas-xi-one.vercel.app",
+    vault: "https://vault-xi-one.vercel.app",
+  };
+
+  if (!envUrl || envUrl.trim() === "" || envUrl === "undefined") {
+    return fallbackUrls[remoteName] || "";
+  }
+
+  // If it's a relative URL, or doesn't start with http/https, fall back to production absolute URL
+  if (!envUrl.startsWith("http://") && !envUrl.startsWith("https://")) {
+    return fallbackUrls[remoteName] || envUrl;
+  }
+
+  return envUrl;
+}
+
 async function loadRemoteEntry(remoteName: string): Promise<void> {
   if (remoteEntryCache[remoteName] !== undefined) {
     return remoteEntryCache[remoteName];
   }
 
-  const url = REMOTE_URLS[remoteName];
+  const url = resolveRemoteUrl(remoteName);
   if (!url) {
     throw new Error(`Unknown remote: ${remoteName}`);
   }
 
-  const entryUrl = `${url}/remoteEntry.js`;
+  // Remove any trailing slash to prevent double-slashes in the constructed path
+  const baseUrl = url.replace(/\/$/, "");
+  const entryUrl = `${baseUrl}/remoteEntry.js`;
 
   const promise = new Promise<void>((resolve, reject) => {
     const script = document.createElement("script");
