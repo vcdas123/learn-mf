@@ -1,5 +1,5 @@
 import React from "react";
-import { CosmosRemote, AtlasRemote } from "./lazyRemotes";
+import { CosmosRemote, AtlasRemote, VaultRemote } from "./lazyRemotes";
 
 export interface RemoteRoute {
   path: string;
@@ -21,6 +21,12 @@ export const remoteRoutes: RemoteRoute[] = [
     moduleName: "atlas",
     routePath: "/atlas/*",
   },
+  {
+    path: "/vault",
+    label: "Vault",
+    moduleName: "vault",
+    routePath: "/vault/*",
+  },
 ];
 
 export const remoteComponentMap: Record<
@@ -29,6 +35,7 @@ export const remoteComponentMap: Record<
 > = {
   cosmos: CosmosRemote,
   atlas: AtlasRemote,
+  vault: VaultRemote,
 };
 
 export type RemoteComponentKey = keyof typeof remoteComponentMap;
@@ -55,5 +62,12 @@ export const featureConfigs: FeatureConfig[] = [
     title: "Atlas",
     desc: "Discover books from the world's largest open library and track real-time seismic activity across the globe.",
     badge: "Open Library + USGS",
+  },
+  {
+    path: "/vault",
+    emoji: "\uD83D\uDCB0",
+    title: "Vault",
+    desc: "Live precious metal prices, converters, karat pricing, and historical data from goldprice.dev.",
+    badge: "goldprice.dev",
   },
 ];

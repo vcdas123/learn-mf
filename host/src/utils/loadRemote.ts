@@ -5,6 +5,7 @@ declare namespace NodeJS {
   interface ProcessEnv {
     REMOTE_COSMOS_URL: string;
     REMOTE_ATLAS_URL: string;
+    REMOTE_VAULT_URL: string;
   }
 }
 declare const process: { env: NodeJS.ProcessEnv };
@@ -15,6 +16,7 @@ const remoteEntryCache: Record<string, Promise<void>> = {};
 const REMOTE_URLS: Record<string, string> = {
   cosmos: process.env.REMOTE_COSMOS_URL,
   atlas: process.env.REMOTE_ATLAS_URL,
+  vault: process.env.REMOTE_VAULT_URL,
 };
 
 async function loadRemoteEntry(remoteName: string): Promise<void> {

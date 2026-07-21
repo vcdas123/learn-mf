@@ -63,3 +63,9 @@ export const AtlasRemote = lazy(() =>
     loadRemoteModule("atlas", "./App")
   )
 );
+
+export const VaultRemote = lazy(() =>
+  retryRemoteLoad("vault", () =>
+    loadRemoteModule("vault", "./App")
+  )
+);

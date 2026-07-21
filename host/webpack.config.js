@@ -96,6 +96,9 @@ module.exports = (env, argv) => {
         "process.env.REMOTE_ATLAS_URL": JSON.stringify(
           process.env.REMOTE_ATLAS_URL
         ),
+        "process.env.REMOTE_VAULT_URL": JSON.stringify(
+          process.env.REMOTE_VAULT_URL
+        ),
       }),
     ],
     output: {
