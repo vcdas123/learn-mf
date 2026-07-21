@@ -13,32 +13,49 @@ declare const process: { env: NodeJS.ProcessEnv };
 const remoteContainerCache: Record<string, any> = {};
 const remoteEntryCache: Record<string, Promise<void>> = {};
 
-const REMOTE_URLS: Record<string, string> = {
+const REMOTE_URLS: Record<string, string | undefined> = {
   cosmos: process.env.REMOTE_COSMOS_URL,
   atlas: process.env.REMOTE_ATLAS_URL,
   vault: process.env.REMOTE_VAULT_URL,
 };
 
-function resolveRemoteUrl(remoteName: string): string {
-  const envUrl = REMOTE_URLS[remoteName];
-  
-  // Fallback mapping for production if env vars are missing or relative
+function resolveRemoteEntryUrl(remoteName: string): string {
+  const envUrl = REMOTE_URLS[remoteName]?.trim();
+
   const fallbackUrls: Record<string, string> = {
     cosmos: "https://cosmos-xi-one.vercel.app",
     atlas: "https://atlas-xi-one.vercel.app",
     vault: "https://vault-xi-one.vercel.app",
   };
+  const fallbackUrl = fallbackUrls[remoteName];
 
-  if (!envUrl || envUrl.trim() === "" || envUrl === "undefined") {
-    return fallbackUrls[remoteName] || "";
+  if (!fallbackUrl) {
+    return "";
   }
 
-  // If it's a relative URL, or doesn't start with http/https, fall back to production absolute URL
-  if (!envUrl.startsWith("http://") && !envUrl.startsWith("https://")) {
-    return fallbackUrls[remoteName] || envUrl;
+  let configuredUrl: URL;
+  try {
+    configuredUrl = new URL(envUrl || fallbackUrl);
+  } catch {
+    configuredUrl = new URL(fallbackUrl);
   }
 
-  return envUrl;
+  // A remote must not resolve against the host deployment. This commonly happens
+  // when a Vercel environment variable is set to `/cosmos` or to the host route.
+  // It works during client navigation, but a hard refresh then requests the remote
+  // container from learn-mf.vercel.app instead of the Cosmos deployment.
+  const isLocalDevelopment = ["localhost", "127.0.0.1"].includes(
+    window.location.hostname
+  );
+  if (!isLocalDevelopment && configuredUrl.origin === window.location.origin) {
+    configuredUrl = new URL(fallbackUrl);
+  }
+
+  configuredUrl.pathname = configuredUrl.pathname
+    .replace(/\/$/, "")
+    .replace(/\/remoteEntry\.js$/, "");
+
+  return `${configuredUrl.toString().replace(/\/$/, "")}/remoteEntry.js`;
 }
 
 async function loadRemoteEntry(remoteName: string): Promise<void> {
@@ -47,14 +64,10 @@ async function loadRemoteEntry(remoteName: string): Promise<void> {
     return remoteEntryCache[remoteName];
   }
 
-  const url = resolveRemoteUrl(remoteName);
-  if (!url) {
+  const entryUrl = resolveRemoteEntryUrl(remoteName);
+  if (!entryUrl) {
     throw new Error(`Unknown remote: ${remoteName}`);
   }
-
-  // Remove any trailing slash to prevent double-slashes in the constructed path
-  const baseUrl = url.replace(/\/$/, "");
-  const entryUrl = `${baseUrl}/remoteEntry.js`;
 
   const promise = new Promise<void>((resolve, reject) => {
     const script = document.createElement("script");
