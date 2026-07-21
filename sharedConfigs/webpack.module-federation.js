@@ -1,13 +1,11 @@
 const path = require("path");
 
-// Resolve webpack from the calling app's node_modules
 function requireFromApp(moduleName) {
   const pathsToTry = [
     process.cwd(),
     path.resolve(process.cwd(), "node_modules"),
     __dirname,
   ];
-
   for (const tryPath of pathsToTry) {
     try {
       const resolved = require.resolve(moduleName, { paths: [tryPath] });
@@ -16,131 +14,91 @@ function requireFromApp(moduleName) {
       continue;
     }
   }
-
   return require(moduleName);
 }
 
 const webpack = requireFromApp("webpack");
 const ModuleFederationPlugin = webpack.container.ModuleFederationPlugin;
 
-// Try to load dotenv (optional, might not be needed if env vars are set)
 try {
   const dotenv = requireFromApp("dotenv");
   dotenv.config({ path: path.resolve(__dirname, "../.env") });
 } catch (e) {
-  // dotenv is optional - environment variables can be set externally
   console.warn("dotenv not found, using environment variables directly");
 }
-
-/**
- * Module Federation Shared Dependencies
- *
- * All applications (host and remotes) must use these exact versions
- * for proper singleton sharing.
- */
 
 const sharedDependencies = {
   react: {
     singleton: true,
     requiredVersion: "^18.2.0",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   "react-dom": {
     singleton: true,
     requiredVersion: "^18.2.0",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   "react-router-dom": {
     singleton: true,
     requiredVersion: "^6.20.0",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   "react-redux": {
     singleton: true,
     requiredVersion: "^8.1.3",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   "@reduxjs/toolkit": {
     singleton: true,
     requiredVersion: "^1.9.7",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   zustand: {
     singleton: true,
     requiredVersion: "^4.4.7",
-    eager: true, // Eager loading for standalone mode compatibility
+    eager: true,
   },
   "@mui/material": {
     singleton: true,
     requiredVersion: "^5.15.0",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   "@mui/icons-material": {
     singleton: true,
     requiredVersion: "^5.15.0",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   "@emotion/react": {
     singleton: true,
     requiredVersion: "^11.11.1",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
   "@emotion/styled": {
     singleton: true,
     requiredVersion: "^11.11.0",
-    eager: true, // Eager loading for initial consumption
+    eager: true,
   },
 };
 
-/**
- * Host Module Federation Configuration
- */
-// exports.getHostConfig = () => {
-//   const REMOTE_STUDENT_GRADES_URL =
-//     process.env.REMOTE_STUDENT_GRADES_URL || "http://localhost:3105";
-//   const REMOTE_ACTIVITY_LOG_URL =
-//     process.env.REMOTE_ACTIVITY_LOG_URL || "http://localhost:3106";
-//   const REMOTE_IMAGE_ANALYZER_URL =
-//     process.env.REMOTE_IMAGE_ANALYZER_URL || "http://localhost:3107";
-
-//   return {
-//     name: "host",
-//     remotes: {
-//       "student-grades": `student_grades@${REMOTE_STUDENT_GRADES_URL}/remoteEntry.js`,
-//       "activity-log": `activity_log@${REMOTE_ACTIVITY_LOG_URL}/remoteEntry.js`,
-//       // image-analyzer remote uses image_analyzer as library name (no hyphens)
-//       "image-analyzer": `image_analyzer@${REMOTE_IMAGE_ANALYZER_URL}/remoteEntry.js`,
-//     },
-//     shared: sharedDependencies,
-//   };
-// };
 exports.getHostConfig = () => {
   const stripTrailingSlash = url => url.replace(/\/$/, "");
-
-  const REMOTE_STUDENT_GRADES_URL = stripTrailingSlash(
-    process.env.REMOTE_STUDENT_GRADES_URL || "http://localhost:3105",
+  const REMOTE_COSMOS_URL = stripTrailingSlash(
+    process.env.REMOTE_COSMOS_URL || "http://localhost:3105",
   );
-  const REMOTE_ACTIVITY_LOG_URL = stripTrailingSlash(
-    process.env.REMOTE_ACTIVITY_LOG_URL || "http://localhost:3106",
-  );
-  const REMOTE_IMAGE_ANALYZER_URL = stripTrailingSlash(
-    process.env.REMOTE_IMAGE_ANALYZER_URL || "http://localhost:3107",
+  const REMOTE_ATLAS_URL = stripTrailingSlash(
+    process.env.REMOTE_ATLAS_URL || "http://localhost:3106",
   );
 
   return {
     name: "host",
     remotes: {
-      "student-grades": `student_grades@${REMOTE_STUDENT_GRADES_URL}/remoteEntry.js`,
-      "activity-log": `activity_log@${REMOTE_ACTIVITY_LOG_URL}/remoteEntry.js`,
-      "image-analyzer": `image_analyzer@${REMOTE_IMAGE_ANALYZER_URL}/remoteEntry.js`,
+      cosmos: `cosmos@${REMOTE_COSMOS_URL}/remoteEntry.js`,
+      atlas: `atlas@${REMOTE_ATLAS_URL}/remoteEntry.js`,
     },
     shared: sharedDependencies,
   };
 };
 
-/**
- * Remote Module Federation Configuration
- */
 exports.getRemoteConfig = remoteName => {
   const config = {
     name: remoteName,
@@ -151,10 +109,7 @@ exports.getRemoteConfig = remoteName => {
     shared: sharedDependencies,
   };
 
-  // Fix for remote names with hyphens (e.g., "activity-log")
-  // Use "var" type with a valid identifier (no hyphens)
   if (remoteName.includes("-")) {
-    // Convert "activity-log" to "activity_log" for the library name
     const validIdentifier = remoteName.replace(/-/g, "_");
     config.library = {
       type: "var",

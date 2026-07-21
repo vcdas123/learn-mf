@@ -1,6 +1,7 @@
 import React from "react";
-import { Container, Alert, Typography, Box, Paper, Button } from "@mui/material";
+import { Container, Typography, Box, Paper, Button } from "@mui/material";
 import { motion } from "framer-motion";
+import { colors } from "../theme/colors";
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -12,12 +13,6 @@ interface RemoteErrorBoundaryProps {
   moduleName: string;
 }
 
-/**
- * Error Boundary for Remote Module Loading Failures
- * 
- * Catches errors when remote modules fail to load and displays
- * a user-friendly error message with troubleshooting steps.
- */
 export class RemoteErrorBoundary extends React.Component<
   RemoteErrorBoundaryProps,
   ErrorBoundaryState
@@ -45,34 +40,38 @@ export class RemoteErrorBoundary extends React.Component<
         errorMessage.includes("Failed to fetch");
 
       return (
-        <Container maxWidth="md" sx={{ py: 8 }}>
+        <Container maxWidth="md" sx={{ py: 8, bgcolor: "background.default" }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Alert severity="error" sx={{ mb: 4 }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Failed to Load {this.props.moduleName} Module
+            <Paper
+              elevation={0}
+              sx={{
+                p: 5,
+                borderRadius: "12px",
+                border: "1px solid #e6dfd8",
+                bgcolor: "background.default",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: '"Cormorant Garamond", serif',
+                  fontSize: "1.5rem",
+                  fontWeight: 500,
+                  mb: 2,
+                  color: "text.primary",
+                }}
+              >
+                Failed to Load {this.props.moduleName}
               </Typography>
-              {isNetworkError ? (
-                <>
-                  <Typography variant="body2" sx={{ mb: 2 }}>
-                    Unable to connect to the remote module server after multiple retry attempts. Please ensure:
-                  </Typography>
-                  <Box component="ul" sx={{ pl: 3, mb: 3 }}>
-                    <li>The {this.props.moduleName} remote server is running</li>
-                    <li>The server is accessible at the configured URL</li>
-                    <li>There are no network connectivity issues</li>
-                    <li>CORS is properly configured if accessing from a different origin</li>
-                  </Box>
-                  <Typography variant="caption" sx={{ color: "text.secondary", fontStyle: "italic" }}>
-                    Note: The system automatically retries loading remotes. If you just started the servers, 
-                    wait a moment and click "Retry Loading" or refresh the page.
-                  </Typography>
-                </>
-              ) : (
-                <Typography variant="body2" sx={{ mb: 3 }}>
-                  An error occurred while loading the module:
+              {isNetworkError && (
+                <Typography sx={{ color: "text.secondary", mb: 3, lineHeight: 1.6 }}>
+                  The remote server may not be running. Start it with{" "}
+                  <Box component="code" sx={{ bgcolor: "rgba(204, 120, 92, 0.08)", px: 1, py: 0.5, borderRadius: "4px", fontFamily: '"JetBrains Mono", monospace', fontSize: "0.875rem" }}>
+                    npm run dev
+                  </Box>{" "}
+                  in the remote's directory.
                 </Typography>
               )}
               <Paper
@@ -80,40 +79,37 @@ export class RemoteErrorBoundary extends React.Component<
                 sx={{
                   p: 2,
                   mb: 3,
-                  bgcolor: (theme) => theme.palette.mode === "light" ? "grey.100" : "rgba(255,255,255,0.05)",
-                  borderRadius: 1,
-                  fontFamily: "monospace",
-                  fontSize: "0.875rem",
+                  bgcolor: colors.surface.dark,
+                  borderRadius: "8px",
+                  fontFamily: '"JetBrains Mono", monospace',
+                  fontSize: "0.8125rem",
+                  color: colors.onDarkSoft,
                   overflow: "auto",
                 }}
               >
                 {errorMessage}
               </Paper>
-              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      // Reset error state to trigger a retry
-                      // The lazy loader will automatically retry when the component re-renders
-                      this.setState({ hasError: false, error: null });
-                    }}
-                    sx={{
-                      background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
-                      boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
-                    }}
-                  >
-                    Retry Loading
-                  </Button>
-                </motion.div>
-                <Button variant="outlined" onClick={() => window.history.back()}>
-                  Go Back
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={() => this.setState({ hasError: false, error: null })}
+                  sx={{
+                    bgcolor: "primary.main",
+                    color: "primary.contrastText",
+                    "&:hover": { bgcolor: "primary.dark" },
+                  }}
+                >
+                  Retry
                 </Button>
-                <Button variant="text" onClick={() => (window.location.href = "/")}>
-                  Go to Home
+                <Button
+                  variant="text"
+                  onClick={() => (window.location.href = "/")}
+                  sx={{ color: "primary.main" }}
+                >
+                  Go Home
                 </Button>
               </Box>
-            </Alert>
+            </Paper>
           </motion.div>
         </Container>
       );
@@ -122,4 +118,3 @@ export class RemoteErrorBoundary extends React.Component<
     return this.props.children;
   }
 }
-

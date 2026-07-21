@@ -21,7 +21,7 @@ import {
   Home as HomeIcon,
   Menu as MenuIcon,
   Close as CloseIcon,
-  Dashboard as DashboardIcon,
+  Explore as ExploreIcon,
   LightMode as LightModeIcon,
   DarkMode as DarkModeIcon,
 } from "@mui/icons-material";
@@ -31,13 +31,24 @@ import { setCurrentModule, setTheme } from "../store/slices/appSlice";
 import { remoteRoutes } from "../routes/remoteRoutes";
 import type { RootState } from "../store";
 
-/**
- * Navigation component for the host application
- *
- * Provides responsive navigation with desktop and mobile drawer support.
- * Updates the current module in Redux store when navigating.
- * Includes a theme toggle for light/dark mode.
- */
+const SpikeMark: React.FC<{ size?: number; color?: string }> = ({
+  size = 20,
+  color = "currentColor",
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    style={{ display: "inline-block", verticalAlign: "middle" }}
+  >
+    <line x1="12" y1="2" x2="12" y2="22" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    <line x1="2" y1="12" x2="22" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" stroke={color} strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
 export const Navigation: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -51,29 +62,23 @@ export const Navigation: React.FC = () => {
     ...remoteRoutes.map((route) => ({
       path: route.path,
       label: route.label,
-      icon: <DashboardIcon />,
+      icon: <ExploreIcon />,
     })),
   ];
 
   const isItemActive = (itemPath: string) => {
-    if (itemPath === "/") {
-      return location.pathname === "/";
-    }
+    if (itemPath === "/") return location.pathname === "/";
     return (
       location.pathname === itemPath ||
       location.pathname.startsWith(`${itemPath}/`)
     );
   };
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const handleNavClick = (path: string, label: string) => {
     dispatch(setCurrentModule(label));
-    if (isMobile) {
-      setMobileOpen(false);
-    }
+    if (isMobile) setMobileOpen(false);
   };
 
   const handleThemeToggle = () => {
@@ -89,20 +94,30 @@ export const Navigation: React.FC = () => {
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        bgcolor: "background.default",
       }}
     >
       <Toolbar
         sx={{
-          background: (theme) =>
-            theme.palette.mode === "light"
-              ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)"
-              : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
-          color: "white",
+          bgcolor: "background.default",
+          color: "text.primary",
+          borderBottom: "1px solid",
+          borderColor: "divider",
         }}
       >
-        <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
-          Navigation
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexGrow: 1 }}>
+          <SpikeMark size={18} color={mode === "light" ? "#141413" : "#faf9f5"} />
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: '"Cormorant Garamond", serif',
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Discovery Hub
+          </Typography>
+        </Box>
         {isMobile && (
           <IconButton color="inherit" onClick={handleDrawerToggle}>
             <CloseIcon />
@@ -128,26 +143,18 @@ export const Navigation: React.FC = () => {
                   sx={{
                     mx: 2,
                     mb: 1,
-                    borderRadius: 2,
+                    borderRadius: "8px",
                     "&.Mui-selected": {
-                      background: (theme) =>
-                        theme.palette.mode === "light"
-                          ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)"
-                          : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
-                      color: "white",
+                      background: "primary.main",
+                      color: "primary.contrastText",
                       "&:hover": {
-                        background: (theme) =>
-                          theme.palette.mode === "light"
-                            ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)"
-                            : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
+                        background: "primary.dark",
                       },
                     },
                   }}
                 >
                   <ListItemIcon
-                    sx={{
-                      color: active ? "white" : "inherit",
-                    }}
+                    sx={{ color: active ? "primary.contrastText" : "inherit", minWidth: 40 }}
                   >
                     {item.icon}
                   </ListItemIcon>
@@ -158,9 +165,8 @@ export const Navigation: React.FC = () => {
           );
         })}
       </List>
-
       <Box sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
-        <ListItemButton onClick={handleThemeToggle} sx={{ borderRadius: 2 }}>
+        <ListItemButton onClick={handleThemeToggle} sx={{ borderRadius: "8px" }}>
           <ListItemIcon>
             {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
           </ListItemIcon>
@@ -178,14 +184,12 @@ export const Navigation: React.FC = () => {
         position="sticky"
         elevation={0}
         sx={{
-          background: theme.palette.background.paper,
+          bgcolor: "background.default",
           borderBottom: "1px solid",
           borderColor: "divider",
-          backdropFilter: "blur(10px)",
-          color: theme.palette.text.primary,
         }}
       >
-        <Toolbar sx={{ px: { xs: 2, md: 4 } }}>
+        <Toolbar sx={{ px: { xs: 2, md: 4 }, height: 64, justifyContent: "space-between" }}>
           {isMobile && (
             <IconButton
               edge="start"
@@ -197,31 +201,37 @@ export const Navigation: React.FC = () => {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography
-            variant="h6"
+          <Box
             component={Link}
             to="/"
             onClick={() => handleNavClick("/", "Home")}
             sx={{
-              flexGrow: 1,
-              fontWeight: 700,
-              background: (theme) =>
-                theme.palette.mode === "light"
-                  ? "linear-gradient(135deg, #6366f1 0%, #ec4899 100%)"
-                  : "linear-gradient(135deg, #4f46e5 0%, #9d174d 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
+              display: "flex",
+              alignItems: "center",
+              gap: 1.25,
               textDecoration: "none",
-              cursor: "pointer",
+              color: "inherit",
+              mr: 4,
             }}
           >
-            🚀 Micro-Frontend Demo
-          </Typography>
+            <SpikeMark size={18} color={mode === "light" ? "#141413" : "#faf9f5"} />
+            <Typography
+              sx={{
+                fontFamily: '"Cormorant Garamond", serif',
+                fontWeight: 500,
+                fontSize: "1.25rem",
+                letterSpacing: "-0.02em",
+                color: "text.primary",
+                lineHeight: 1,
+              }}
+            >
+              Discovery Hub
+            </Typography>
+          </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, md: 1 } }}>
             {!isMobile && (
-              <Box sx={{ display: "flex", gap: 1, mr: 2 }}>
+              <Box sx={{ display: "flex", gap: 0.5, mr: 2 }}>
                 {navItems.map((item) => {
                   const active = isItemActive(item.path);
                   return (
@@ -229,18 +239,21 @@ export const Navigation: React.FC = () => {
                       key={item.path}
                       component={Link}
                       to={item.path}
-                      variant={active ? "contained" : "text"}
                       onClick={() => handleNavClick(item.path, item.label)}
                       sx={{
-                        borderRadius: 2,
-                        px: 3,
+                        borderRadius: "8px",
+                        px: 2.5,
+                        py: 1,
                         textTransform: "none",
-                        fontWeight: 600,
-                        color: active ? "white" : "inherit",
-                        ...(active && {
-                          background: (theme) => theme.palette.mode === "light" ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" : "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
-                          boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
-                        }),
+                        fontWeight: 500,
+                        fontSize: "0.875rem",
+                        color: active ? "primary.main" : "text.secondary",
+                        bgcolor: active
+                          ? "rgba(204, 120, 92, 0.08)"
+                          : "transparent",
+                        "&:hover": {
+                          bgcolor: "rgba(204, 120, 92, 0.08)",
+                        },
                       }}
                     >
                       {item.label}
@@ -249,23 +262,18 @@ export const Navigation: React.FC = () => {
                 })}
               </Box>
             )}
-
             <Tooltip
               title={`Switch to ${mode === "light" ? "dark" : "light"} mode`}
             >
               <IconButton
                 onClick={handleThemeToggle}
-                color="inherit"
+                size="small"
                 sx={{
-                  background:
-                    mode === "light"
-                      ? "rgba(0,0,0,0.04)"
-                      : "rgba(255,255,255,0.08)",
+                  width: 36,
+                  height: 36,
+                  color: "text.secondary",
                   "&:hover": {
-                    background:
-                      mode === "light"
-                        ? "rgba(0,0,0,0.08)"
-                        : "rgba(255,255,255,0.12)",
+                    bgcolor: "rgba(204, 120, 92, 0.08)",
                   },
                 }}
               >
@@ -284,9 +292,7 @@ export const Navigation: React.FC = () => {
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
+          ModalProps={{ keepMounted: true }}
         >
           {drawer}
         </Drawer>

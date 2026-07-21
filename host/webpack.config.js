@@ -75,7 +75,7 @@ module.exports = (env, argv) => {
     entry: "./src/index.tsx",
     devServer: {
       port: Number(PORT),
-      open: true,
+      open: false,
       historyApiFallback: true,
       headers: {
         "Access-Control-Allow-Origin": "*",

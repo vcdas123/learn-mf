@@ -6,12 +6,6 @@ interface RemoteLoadingProps {
   moduleName: string;
 }
 
-/**
- * Loading component for remote modules
- * 
- * Displays a loading indicator while a remote module is being loaded.
- * Used as fallback in Suspense boundaries.
- */
 export const RemoteLoading: React.FC<RemoteLoadingProps> = ({ moduleName }) => (
   <Box
     sx={{
@@ -19,18 +13,28 @@ export const RemoteLoading: React.FC<RemoteLoadingProps> = ({ moduleName }) => (
       justifyContent: "center",
       alignItems: "center",
       minHeight: "400px",
+      bgcolor: "background.default",
     }}
   >
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="text-center"
+      style={{ textAlign: "center" }}
     >
-      <CircularProgress size={48} sx={{ mb: 3 }} />
-      <Typography variant="body1" sx={{ color: "text.secondary", mt: 2 }}>
-        Loading {moduleName} module...
+      <CircularProgress
+        size={40}
+        sx={{ color: "primary.main", mb: 3 }}
+      />
+      <Typography
+        sx={{
+          color: "text.secondary",
+          mt: 2,
+          fontFamily: '"Cormorant Garamond", serif',
+          fontSize: "1.125rem",
+        }}
+      >
+        Loading {moduleName}...
       </Typography>
     </motion.div>
   </Box>
 );
-

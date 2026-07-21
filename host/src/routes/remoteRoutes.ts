@@ -1,58 +1,34 @@
 import React from "react";
-import {
-  StudentGradesRemote,
-  ActivityLogRemote,
-  ImageAnalyzerRemote,
-} from "./lazyRemotes";
-
-/**
- * Remote route configuration
- *
- * Centralized configuration for remote application routes.
- * Used to generate route definitions and navigation items.
- */
+import { CosmosRemote, AtlasRemote } from "./lazyRemotes";
 
 export interface RemoteRoute {
   path: string;
   label: string;
   moduleName: string;
-  routePath: string; // The route path pattern (e.g., "/grades/*")
+  routePath: string;
 }
 
 export const remoteRoutes: RemoteRoute[] = [
   {
-    path: "/student-grades",
-    label: "Student Grades",
-    moduleName: "student-grades",
-    routePath: "/student-grades/*",
+    path: "/cosmos",
+    label: "Cosmos",
+    moduleName: "cosmos",
+    routePath: "/cosmos/*",
   },
   {
-    path: "/activity-log",
-    label: "Activity Log",
-    moduleName: "activity-log",
-    routePath: "/activity-log/*",
-  },
-  {
-    path: "/image-analyzer",
-    label: "Image Analyzer",
-    moduleName: "image-analyzer",
-    routePath: "/image-analyzer/*",
+    path: "/atlas",
+    label: "Atlas",
+    moduleName: "atlas",
+    routePath: "/atlas/*",
   },
 ];
 
-/**
- * Map remote module names to their lazy-loaded components
- *
- * This mapping connects the moduleName from remoteRoutes to the
- * actual lazy-loaded React component.
- */
 export const remoteComponentMap: Record<
   string,
   React.LazyExoticComponent<React.ComponentType<any>>
 > = {
-  "student-grades": StudentGradesRemote,
-  "activity-log": ActivityLogRemote,
-  "image-analyzer": ImageAnalyzerRemote,
+  cosmos: CosmosRemote,
+  atlas: AtlasRemote,
 };
 
 export type RemoteComponentKey = keyof typeof remoteComponentMap;
@@ -62,37 +38,22 @@ export interface FeatureConfig {
   emoji: string;
   title: string;
   desc: string;
-  color: string;
-  borderColor: string;
   badge: string;
 }
 
 export const featureConfigs: FeatureConfig[] = [
   {
-    path: "/student-grades",
-    emoji: "📚",
-    title: "Student Grades",
-    desc: "Manage student grades and assessments with Zustand state management",
-    color: "from-blue-50 to-indigo-50",
-    borderColor: "border-blue-200",
-    badge: "Zustand",
+    path: "/cosmos",
+    emoji: "\u2728",
+    title: "Cosmos",
+    desc: "Explore the universe through NASA's Astronomy Picture of the Day. Browse stunning space imagery with detailed scientific explanations.",
+    badge: "NASA API",
   },
   {
-    path: "/activity-log",
-    emoji: "📋",
-    title: "Activity Log",
-    desc: "Track and manage activity log entries with real-time updates",
-    color: "from-purple-50 to-pink-50",
-    borderColor: "border-purple-200",
-    badge: "MUI",
-  },
-  {
-    path: "/image-analyzer",
-    emoji: "🖼️",
-    title: "Image Analyzer",
-    desc: "AI-powered image analysis and insights with advanced features",
-    color: "from-indigo-50 to-purple-50",
-    borderColor: "border-indigo-200",
-    badge: "AI",
+    path: "/atlas",
+    emoji: "\uD83D\uDDFA\uFE0F",
+    title: "Atlas",
+    desc: "Discover books from the world's largest open library and track real-time seismic activity across the globe.",
+    badge: "Open Library + USGS",
   },
 ];
