@@ -1,0 +1,16 @@
+{
+  "installCommand": "npm install && cd remotes/cosmos && npm install",
+  "buildCommand": "npm run build:cosmos",
+  "outputDirectory": "remotes/cosmos/dist",
+  "framework": null,
+  "headers": [
+    {
+      "source": "/remoteEntry.js",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET" },
+        { "key": "Access-Control-Allow-Headers", "value": "*" }
+      ]
+    }
+  ]
+}
