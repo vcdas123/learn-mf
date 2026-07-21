@@ -1,6 +1,0 @@
-{
-  "installCommand": "npm install && cd host && npm install",
-  "buildCommand": "npm run build:host",
-  "outputDirectory": "host/dist",
-  "framework": null
-}
