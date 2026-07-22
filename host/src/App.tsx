@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getTheme } from "./theme";
 import { Navigation } from "./components/Navigation";
 import { HomePage } from "./components/HomePage";
+import { Footer } from "./components/Footer";
 import { RemoteErrorBoundary } from "./components/RemoteErrorBoundary";
 import { RemoteLoading } from "./components/RemoteLoading";
 import NotificationSystem from "./components/NotificationSystem";
@@ -44,36 +45,41 @@ function App(): React.ReactElement {
       <Box
         sx={{
           minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
           bgcolor: "background.default",
           transition: "background-color 0.3s ease",
         }}
       >
         <Navigation />
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<HomePage />} />
-            {remoteRoutes.map(route => {
-              const RemoteComponent = remoteComponentMap[route.moduleName];
-              if (!RemoteComponent) return null;
-              return (
-                <Route
-                  key={route.routePath}
-                  path={route.routePath}
-                  element={
-                    <RemoteErrorBoundary moduleName={route.moduleName}>
-                      <Suspense
-                        fallback={<RemoteLoading moduleName={route.moduleName} />}
-                      >
-                        <RemoteComponent />
-                      </Suspense>
-                    </RemoteErrorBoundary>
-                  }
-                />
-              );
-            })}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </AnimatePresence>
+        <Box component="main" sx={{ flex: 1 }}>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<HomePage />} />
+              {remoteRoutes.map(route => {
+                const RemoteComponent = remoteComponentMap[route.moduleName];
+                if (!RemoteComponent) return null;
+                return (
+                  <Route
+                    key={route.routePath}
+                    path={route.routePath}
+                    element={
+                      <RemoteErrorBoundary moduleName={route.moduleName}>
+                        <Suspense
+                          fallback={<RemoteLoading moduleName={route.moduleName} />}
+                        >
+                          <RemoteComponent />
+                        </Suspense>
+                      </RemoteErrorBoundary>
+                    }
+                  />
+                );
+              })}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AnimatePresence>
+        </Box>
+        <Footer />
         <NotificationSystem />
       </Box>
     </ThemeProvider>
