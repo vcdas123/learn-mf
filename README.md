@@ -1,274 +1,366 @@
-# Enterprise Micro-Frontend Demo
+# Discovery Hub
 
-Complete working demo of enterprise-grade micro-frontend architecture using Webpack Module Federation with React, Redux, MUI, Tailwind CSS, and Framer Motion.
+Discovery Hub is a learning-focused micro-frontend platform built with React, TypeScript, Webpack 5 Module Federation, Redux Toolkit, Zustand, Material UI, Tailwind CSS, and Framer Motion.
 
-## 🏗️ Architecture
+The host application provides the shared application shell, router, Redux store, theme, navigation, notifications, loading states, and error boundaries. Three independently deployable remotes are loaded at runtime only when their routes are visited:
 
-- **ONE React root** - Only in host application
-- **ONE BrowserRouter** - Only in host application
-- **Remotes as pure React components** - No mount functions
-- **Natural context flow** - React Router context flows automatically
-- **Redux shared** - Host Redux store available to remotes
-- **Zustand support** - Remotes can use Zustand for module-specific state
-- **MUI support** - Material-UI components available
-- **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Beautiful animations and transitions
+- **Cosmos** — NASA Astronomy Picture of the Day explorer
+- **Atlas** — book discovery and earthquake activity explorer
+- **Vault** — precious-metal prices, converters, and historical pricing tools
 
-## 📁 Project Structure
+## Architecture
 
-```
-microfrontend-demo/
-├── host/                    # Host application
-│   ├── src/
-│   │   ├── index.tsx       # ONE createRoot() call
-│   │   ├── App.tsx         # ONE BrowserRouter + routing
-│   │   ├── components/     # Host components (Navigation, Notifications)
-│   │   ├── store/          # Redux store (shared with remotes)
-│   │   │   ├── index.ts    # Store configuration
-│   │   │   └── slices/     # Redux slices (appSlice, counterSlice)
-│   │   ├── styles/         # Global CSS with Tailwind
-│   │   └── assets/         # Images, fonts, favicons
-│   └── package.json
-├── remotes/
-│   ├── student-grades/     # Student Grades module (Zustand store)
-│   ├── activity-log/       # Activity Log module
-│   └── image-analyzer/      # Image Analyzer module
-├── sharedConfigs/          # Shared webpack configs
-│   ├── webpack.common.js   # Common webpack config
-│   ├── webpack.module-federation.js # Module Federation config
-│   ├── postcss.config.js   # PostCSS config (Tailwind)
-│   └── tailwind.config.js  # Tailwind config
-├── docs/                    # Comprehensive documentation
-│   ├── README.md           # Documentation index
-│   ├── PROJECT_STRUCTURE.md # Complete folder structure
-│   ├── COMPLETE_SETUP_GUIDE.md # Setup and configuration
-│   ├── ENTERPRISE_COMPONENT_ARCHITECTURE.md # Architecture guide
-│   ├── research-templates/ # Research and template files
-│   │   ├── HostApp.enterprise.tsx
-│   │   ├── RemoteApp.enterprise.tsx
-│   │   └── ModuleFederationConfig.enterprise.js
-│   └── ...                 # More documentation files
-├── package.json             # Root package.json with convenient scripts
-├── .env                     # Environment variables (ports, URLs)
-└── README.md                # This file
+```text
+Browser
+  |
+  v
+Host application (:3000)
+  |- React root
+  |- BrowserRouter
+  |- Redux Provider
+  |- MUI ThemeProvider
+  |- Navigation and notifications
+  |- /cosmos/* ----> Cosmos remote (:3105)
+  |- /atlas/* -----> Atlas remote (:3106)
+  `- /vault/* -----> Vault remote (:3107)
 ```
 
-## 🚀 Quick Start
+### Core principles
 
-### 1. Install Dependencies
+- The host owns the primary React root and `BrowserRouter`.
+- Remotes expose `./App` as React components through Module Federation.
+- Remote applications can run independently through their development entry points.
+- The host loads each remote's `remoteEntry.js` dynamically when its route is accessed.
+- Failed remote loads are retried and rendered through a remote-specific error boundary.
+- Shared libraries are configured as singleton dependencies to avoid duplicate React, router, Redux, Zustand, MUI, and Emotion instances.
+- The host Redux store and router context naturally flow into federated components.
+- Remote URLs can be configured through environment variables without rebuilding the Module Federation configuration.
 
-**Option 1: Install all at once (Recommended)**
+## Applications
+
+| Application | Route | Default port | Purpose |
+| --- | --- | ---: | --- |
+| Host | `/` | `3000` | Shared shell, navigation, routing, theme, notifications, and remote loading |
+| Cosmos | `/cosmos/*` | `3105` | NASA Astronomy Picture of the Day explorer |
+| Atlas | `/atlas/*` | `3106` | Open Library book discovery and USGS earthquake exploration |
+| Vault | `/vault/*` | `3107` | Gold, silver, and copper pricing tools |
+
+## Technology stack
+
+- React 18
+- TypeScript 5
+- Webpack 5
+- Webpack Module Federation
+- React Router 6
+- Redux Toolkit and React Redux
+- Zustand
+- Material UI and Emotion
+- Tailwind CSS and PostCSS
+- Framer Motion
+
+## Repository structure
+
+```text
+learn-mf/
+|- host/
+|  |- public/
+|  |- src/
+|  |  |- components/
+|  |  |- routes/
+|  |  |- store/
+|  |  |- styles/
+|  |  |- utils/
+|  |  |- App.tsx
+|  |  `- index.tsx
+|  |- package.json
+|  `- webpack.config.js
+|- remotes/
+|  |- cosmos/
+|  |- atlas/
+|  `- vault/
+|- sharedConfigs/
+|  |- webpack.common.js
+|  |- webpack.module-federation.js
+|  |- postcss.config.js
+|  `- tailwind.config.js
+|- docs/
+|- package.json
+`- README.md
+```
+
+Each remote exposes the following federated module:
+
+```js
+exposes: {
+  "./App": "./src/App.tsx",
+}
+```
+
+## Prerequisites
+
+- Node.js 16 or newer
+- npm 8 or newer
+
+Use the same Node.js and npm versions across the host and all remotes when possible.
+
+## Installation
+
+Install every application from the repository root:
 
 ```bash
 npm run install:all
 ```
 
-**Option 2: Install individually**
+To install only one application:
 
 ```bash
 npm run install:host
-npm run install:student-grades
-npm run install:activity-log
-npm run install:image-analyzer
+npm run install:cosmos
+npm run install:atlas
+npm run install:vault
 ```
 
-### 2. Configure Environment
+## Environment configuration
 
-The `.env` file should already exist with default ports. You can modify it if needed:
+Create a `.env` file in the repository root.
 
-```bash
+```env
+# Development ports
 HOST_PORT=3000
-REMOTE_STUDENT_GRADES_PORT=3105
-REMOTE_ACTIVITY_LOG_PORT=3106
-REMOTE_IMAGE_ANALYZER_PORT=3107
+REMOTE_COSMOS_PORT=3105
+REMOTE_ATLAS_PORT=3106
+REMOTE_VAULT_PORT=3107
+
+# Remote base URLs used by the host
+REMOTE_COSMOS_URL=http://localhost:3105
+REMOTE_ATLAS_URL=http://localhost:3106
+REMOTE_VAULT_URL=http://localhost:3107
+
+# Optional API credentials
+# Cosmos falls back to NASA's DEMO_KEY when this is omitted.
+REACT_APP_NASA_API_KEY=DEMO_KEY
+
+# Required for Vault API requests that need authentication.
+REACT_APP_GOLDAPI_KEY=
 ```
 
-### 3. Start Development Servers
+Remote URL values should be base URLs. Supplying `/remoteEntry.js` is also tolerated because the loader normalizes the configured value before constructing the final URL.
 
-**Using Root Package.json Scripts (Recommended)**
+When no remote URL is supplied, the host currently falls back to these deployed remotes:
 
-Start each application using the convenient root-level scripts:
+```text
+Cosmos: https://cosmos-xi-one.vercel.app
+Atlas:  https://atlas-xi-one.vercel.app
+Vault:  https://vault-xi-one.vercel.app
+```
+
+Do not configure a production remote URL as a relative host route such as `/cosmos`. Each remote must point to the deployment that serves its own `remoteEntry.js`.
+
+## Running locally
+
+All four development servers must be running when testing the complete host experience.
 
 ```bash
-# Terminal 1: Host
+# Terminal 1
 npm run dev:host
 
-# Terminal 2: Student Grades Remote
-npm run dev:student-grades
+# Terminal 2
+npm run dev:cosmos
 
-# Terminal 3: Activity Log Remote
-npm run dev:activity-log
+# Terminal 3
+npm run dev:atlas
 
-# Terminal 4: Image Analyzer Remote
-npm run dev:image-analyzer
+# Terminal 4
+npm run dev:vault
 ```
 
-**Or manually:**
+Open:
 
-```bash
-cd host && npm run dev
-cd remotes/student-grades && npm run dev
-cd remotes/activity-log && npm run dev
-cd remotes/image-analyzer && npm run dev
-```
+- Host: `http://localhost:3000`
+- Cosmos standalone: `http://localhost:3105`
+- Atlas standalone: `http://localhost:3106`
+- Vault standalone: `http://localhost:3107`
 
-### 4. Access Applications
+The standalone remote builds use `src/dev.tsx` as their entry point. When loaded by the host, Module Federation consumes the remote's exposed `src/App.tsx` component instead.
 
-- **Host Application**: http://localhost:3000 (loads all remotes)
-- **Student Grades Module (Standalone)**: http://localhost:3105
-- **Activity Log Module (Standalone)**: http://localhost:3106
-- **Image Analyzer Module (Standalone)**: http://localhost:3107
-
-## 📚 Available Scripts
+## Available scripts
 
 ### Development
 
 ```bash
-npm run dev:host              # Start host application
-npm run dev:student-grades    # Start student-grades remote
-npm run dev:activity-log      # Start activity-log remote
-npm run dev:image-analyzer    # Start image-analyzer remote
+npm run dev:host
+npm run dev:cosmos
+npm run dev:atlas
+npm run dev:vault
 ```
 
-### Build
+### Production builds
 
 ```bash
-npm run build:host            # Build host application
-npm run build:student-grades  # Build student-grades remote
-npm run build:activity-log    # Build activity-log remote
-npm run build:image-analyzer  # Build image-analyzer remote
-npm run build:all             # Build all remotes + host
-npm run build:remotes         # Build all remotes only
-```
-
-### Installation
-
-```bash
-npm run install:all           # Install dependencies for all apps
-npm run install:host          # Install host dependencies only
-npm run install:student-grades # Install student-grades remote dependencies only
-npm run install:activity-log   # Install activity-log remote dependencies only
-npm run install:image-analyzer # Install image-analyzer remote dependencies only
-```
-
-### Info
-
-```bash
-npm run info            # Display all available commands
-```
-
-## 🎨 UI Features
-
-### Host Application
-
-- **Modern Navigation Bar** - MUI AppBar with responsive design and mobile drawer
-- **Beautiful Home Page** - Gradient text, animated cards with hover effects
-- **Redux Counter Demo** - Interactive counter with notifications
-- **Notification System** - Toast notifications for actions
-- **Responsive Design** - Mobile-friendly with drawer navigation
-- **Theme System** - Custom MUI theme with Tailwind utilities
-- **Framer Motion** - Smooth animations throughout
-
-### Remote Applications
-
-- **Consistent Theme** - All remotes match host design system
-- **Redux Integration** - Access and control host Redux store
-- **Beautiful UI** - Modern cards, gradients, and animations
-- **Standalone Mode** - Each remote can run independently
-
-## 📚 Knowledge Center (Master Documentation Index)
-
-This project is extensively documented to serve as a reference for enterprise micro-frontend architecture. Use this section as your primary index for all "notes" and technical guides.
-
-### 🏁 Getting Started & Setup
-- **[Complete Setup Guide](./docs/COMPLETE_SETUP_GUIDE.md)** - Master guide for environment, webpack, and state management.
-- **[Environment Variables Guide](./docs/ENV_FILE_GUIDE.md)** - Understanding `.env` priority and configuration.
-- **[Project Structure](./docs/PROJECT_STRUCTURE.md)** - Complete breakdown of the repository organization.
-- **[Demo Setup](./docs/DEMO_SETUP.md)** - How to run and test the provided demo scenarios.
-- **[Quick Start Enterprise](./docs/QUICK_START_ENTERPRISE.md)** - "DOs and DON'Ts" and enterprise patterns.
-
-### 🏗️ Architecture & Core Principles
-- **[Enterprise Architecture](./docs/ENTERPRISE_COMPONENT_ARCHITECTURE.md)** - Single root, single router, and pure component patterns.
-- **[Execution Flow](./docs/EXECUTION_FLOW.md)** - Step-by-step breakdown of Standalone vs. Host modes.
-- **[Module Federation Eager Loading](./docs/MODULE_FEDERATION_EAGER_LOADING.md)** - Dependency sharing and `eager: true` configuration.
-- **[Webpack Public Path](./docs/WEBPACK_PUBLIC_PATH.md)** - How dynamic loading works with `publicPath: "auto"`.
-
-### 🛠️ Technical Deep Dives
-- **[CSS Handling Guide](./docs/CSS_HANDLING_GUIDE.md)** - Integrating Tailwind, MUI, and CSS Modules.
-- **[Tailwind & PostCSS Config](./docs/TAILWIND_POSTCSS_CONFIG.md)** - Deep dive into shared styling configuration.
-- **[Asset Structure](./docs/ASSET_STRUCTURE.md)** - Guidelines for images, fonts, and favicons.
-- **[Bundle Size Optimization](./docs/WEBPACK_BUNDLE_SIZE_WARNINGS.md)** - Managing and optimizing build outputs.
-- **[Research Templates](./docs/research-templates/README.md)** - Reference implementations for host and remotes.
-
-### 🚀 Deployment
-- **[Vercel Deployment Guide](./docs/VERCEL_DEPLOYMENT_GUIDE.md)** - Production setup, CORS, and deployment workflows.
-
----
-
-## 🎯 Key Features & Capabilities
-
-### State Management
-- ✅ **Shared Redux** - Host store is naturally accessible by all remotes.
-- ✅ **Zustand Support** - Remotes can use module-specific state.
-- ✅ **Local State** - Standard React hooks usage across all components.
-
-### Styling & UI
-- ✅ **Unified Tailwind** - Utility-first classes shared across the ecosystem.
-- ✅ **MUI Integration** - Enterprise-grade component library.
-- ✅ **Framer Motion** - Smooth, coordinated animations between modules.
-- ✅ **CSS Isolation** - CSS Modules used where scoping is required.
-
-### UI Components
-- ✅ **Responsive Navigation** - Shared AppBar with mobile drawer support.
-- ✅ **Notification System** - Global toast notifications triggered from any remote.
-- ✅ **Architecture Info** - Built-in documentation and diagrams within the UI.
-
----
-
-## 🏭 Production Build & Deployment
-
-### Build Workflow
-```bash
-# 1. Build all remotes (remotes have NO entry point in production)
-npm run build:remotes
-
-# 2. Build host (loads remotes via remoteEntry.js)
 npm run build:host
-
-# OR build everything at once
+npm run build:cosmos
+npm run build:atlas
+npm run build:vault
+npm run build:remotes
 npm run build:all
 ```
 
-### 🌐 Production Environment Variables
-Set these in your CI/CD or production platform (Vercel, AWS, etc.):
+`build:all` builds Cosmos, Atlas, and Vault first, then builds the host.
 
-| Variable | Description |
-|----------|-------------|
-| `REMOTE_STUDENT_GRADES_URL` | Base URL for Student Grades remote |
-| `REMOTE_ACTIVITY_LOG_URL` | Base URL for Activity Log remote |
-| `REMOTE_IMAGE_ANALYZER_URL` | Base URL for Image Analyzer remote |
+### Serve production builds locally
 
----
+Run these commands only after building the corresponding application:
 
-## 🧪 Verification: Testing Redux Integration
+```bash
+npm run start:host
+npm run start:cosmos
+npm run start:atlas
+npm run start:vault
+```
 
-1.  **Home Page**: Navigate to [http://localhost:3000](http://localhost:3000).
-2.  **Host Action**: Use the counter buttons to increment/decrement state.
-3.  **Remote Switch**: Navigate to any remote module (e.g., Student Grades).
-4.  **Shared State**: Observe the same counter value in the remote.
-5.  **Remote Action**: Click action buttons in the remote to update the host store.
-6.  **Confirmation**: Verify notifications and state updates reflect globally.
+### Clean generated output
 
----
+```bash
+npm run clean
+npm run clean:host
+npm run clean:cosmos
+npm run clean:atlas
+npm run clean:vault
+```
 
-## 🐛 Troubleshooting Quick-Ref
+The clean scripts use Unix-style `rm -rf`, so they work directly on macOS and Linux. On Windows, run them through Git Bash/WSL or remove the `dist` directories manually.
 
-- **"vision is not defined"**: Ensure all remote servers are running and `remoteEntry.js` is accessible.
-- **Shared Module Errors**: Check `MODULE_FEDERATION_EAGER_LOADING.md` for version compatibility.
-- **TypeScript Warnings**: Expected for remote imports; see `COMPLETE_SETUP_GUIDE.md`.
-- **Build Failures**: Run `npm run install:all` to ensure all peer dependencies are met.
+## Runtime remote loading
 
----
+The host does not declare static remotes inside `ModuleFederationPlugin`. Instead, it performs runtime loading:
 
-**Built with ❤️ using Webpack Module Federation, React, Redux, MUI, Tailwind CSS, and Framer Motion**
+1. A user navigates to `/cosmos`, `/atlas`, or `/vault`.
+2. React lazily requests the matching remote module.
+3. The host resolves the remote URL from its environment configuration.
+4. A script element loads the remote's `remoteEntry.js`.
+5. The remote container initializes against Webpack's default shared scope.
+6. The host requests the exposed `./App` module.
+7. The remote component renders inside the host's existing router, Redux, and theme context.
 
+Loaded remote entries and containers are cached. Retryable network and script-loading failures are retried up to five times before the error boundary displays a failure state.
+
+## Shared dependencies
+
+The shared Module Federation configuration marks these packages as eager singleton dependencies:
+
+- `react`
+- `react-dom`
+- `react-router-dom`
+- `react-redux`
+- `@reduxjs/toolkit`
+- `zustand`
+- `@mui/material`
+- `@mui/icons-material`
+- `@emotion/react`
+- `@emotion/styled`
+
+Keep compatible versions of these packages across all applications. Version drift can cause invalid hook calls, missing router context, duplicated stores, or inconsistent styling.
+
+## Routing and application shell
+
+The host owns these top-level routes:
+
+```text
+/           Host home page
+/cosmos/*   Cosmos remote
+/atlas/*    Atlas remote
+/vault/*    Vault remote
+```
+
+Unknown paths redirect to `/`.
+
+The host also owns:
+
+- light and dark theme selection;
+- persistence of the selected theme in `localStorage`;
+- responsive navigation;
+- loading UI while a remote downloads;
+- remote error handling;
+- global notifications.
+
+## Production deployment
+
+Deploy the host and each remote independently.
+
+Every remote deployment must serve:
+
+```text
+/remoteEntry.js
+```
+
+Configure the host deployment with the remote base URLs:
+
+```env
+REMOTE_COSMOS_URL=https://your-cosmos-domain.example
+REMOTE_ATLAS_URL=https://your-atlas-domain.example
+REMOTE_VAULT_URL=https://your-vault-domain.example
+```
+
+The projects use `publicPath: "auto"`, allowing Webpack to resolve chunks relative to the script that loaded them. Development servers also return permissive CORS headers so the host can load remote assets from different localhost ports.
+
+A typical deployment order is:
+
+```bash
+npm run build:remotes
+npm run build:host
+```
+
+Deploy the remote `dist` directories first, configure their URLs for the host environment, and then deploy the host `dist` directory.
+
+## Troubleshooting
+
+### A remote page fails to load
+
+Confirm that the remote server or deployment is available and that this URL returns JavaScript:
+
+```text
+<remote-base-url>/remoteEntry.js
+```
+
+Also confirm that the configured URL points to the remote deployment rather than the host route.
+
+### Remote container not found on `window`
+
+The container name must match the Module Federation remote name:
+
+```text
+cosmos
+atlas
+vault
+```
+
+### Invalid hook call or router-context errors
+
+Check that React, React DOM, React Router, Redux, MUI, and Emotion versions remain compatible across the host and remotes. These packages rely on singleton sharing.
+
+### API data does not load
+
+- Cosmos uses `REACT_APP_NASA_API_KEY` and defaults to `DEMO_KEY`.
+- Vault reads `REACT_APP_GOLDAPI_KEY`.
+- Restart the affected development server after changing `.env`.
+
+### A production route works through navigation but fails after refresh
+
+Ensure the hosting platform rewrites application routes to `index.html`. Also verify that remote environment variables contain absolute remote deployment URLs rather than relative host paths.
+
+## Documentation
+
+Additional architecture and setup notes are available in the [`docs`](./docs) directory. Some documents are historical learning notes, so treat the source code and this README as the current reference whenever an older note describes removed remotes or scripts.
+
+## Purpose
+
+This repository is an architecture-learning project for exploring practical micro-frontend concerns, including:
+
+- host and remote boundaries;
+- standalone remote development;
+- runtime remote discovery;
+- dependency sharing;
+- cross-application router and state context;
+- independent builds and deployments;
+- remote loading failures;
+- environment-specific remote URLs.
