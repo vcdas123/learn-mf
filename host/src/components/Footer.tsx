@@ -2,7 +2,8 @@ import React from "react";
 import { Box, Link, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-const CACHIVA_URL = "https://cachiva.vercel.app";
+const DISCOVERY_HUB_URL =
+  "https://cachiva.vercel.app/modules/discovery-hub-39-6c0c8e0b";
 
 export function Footer(): React.ReactElement {
   return (
@@ -29,9 +30,9 @@ export function Footer(): React.ReactElement {
           gap: 0.75,
         }}
       >
-        Explore the knowledge workspace in
+        Explore the architecture, implementation, and deployment notes in
         <Link
-          href={CACHIVA_URL}
+          href={DISCOVERY_HUB_URL}
           target="_blank"
           rel="noopener noreferrer"
           underline="hover"
@@ -42,7 +43,7 @@ export function Footer(): React.ReactElement {
             fontWeight: 600,
           }}
         >
-          Cachiva
+          Discovery Hub on Cachiva
           <OpenInNewIcon sx={{ fontSize: 15 }} aria-hidden="true" />
         </Link>
       </Typography>
